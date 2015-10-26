@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Web
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyDashboard", "CompanyDashboard\CompanyDashboard.csproj", "{9A637956-6F15-4D4F-ADBD-2DA677C7075F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyDashboard.Tests", "CompanyDashboard.Tests\CompanyDashboard.Tests.csproj", "{F6ED3952-2381-42C6-B504-DFA428FDA684}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A637956-6F15-4D4F-ADBD-2DA677C7075F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A637956-6F15-4D4F-ADBD-2DA677C7075F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A637956-6F15-4D4F-ADBD-2DA677C7075F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A637956-6F15-4D4F-ADBD-2DA677C7075F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6ED3952-2381-42C6-B504-DFA428FDA684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6ED3952-2381-42C6-B504-DFA428FDA684}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6ED3952-2381-42C6-B504-DFA428FDA684}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6ED3952-2381-42C6-B504-DFA428FDA684}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
