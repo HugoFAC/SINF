@@ -15,8 +15,19 @@ namespace CompanyDashboard.Lib_Primavera
 {
     public class PriIntegration
     {
-        
+        # region Login
 
+        public static Boolean Login(Model.Login login)
+        {
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), login.Username.Trim(), login.Password.Trim()) == true)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        #endregion Login;
         # region Cliente
 
         public static List<Model.Cliente> ListaClientes()

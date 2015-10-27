@@ -35,7 +35,11 @@ namespace CompanyDashboard.Lib_Primavera
             StdBETransaccao objStdTransac = new StdBETransaccao();
 
             // Opem platform.
-            Plataforma.AbrePlataformaEmpresaIntegrador(ref Company, ref objStdTransac, ref objAplConf, ref objTipoPlataforma);
+            try { Plataforma.AbrePlataformaEmpresaIntegrador(ref Company, ref objStdTransac, ref objAplConf, ref objTipoPlataforma); }
+            catch (Exception e)
+            {
+                return false;
+            }
 
             // Is plt initialized?
             if (Plataforma.Inicializada)
@@ -47,10 +51,13 @@ namespace CompanyDashboard.Lib_Primavera
                 bool blnModoPrimario = true;
 
                 // Open Engine
-                MotorLE.AbreEmpresaTrabalho(EnumTipoPlataforma.tpProfissional, ref Company, ref User, ref Password, ref objStdTransac, "Default", ref blnModoPrimario);
-
+                try { MotorLE.AbreEmpresaTrabalho(EnumTipoPlataforma.tpProfissional, ref Company, ref User, ref Password, ref objStdTransac, "Default", ref blnModoPrimario); }
+                catch (Exception e)
+                {
+                    return false;
+                }
                 // Returns the engine.
-                Engine = MotorLE;
+                Engine = MotorLE; 
 
                 return true;
             }
