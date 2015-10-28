@@ -25,7 +25,7 @@ namespace CompanyDashboard.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("GRUPON")]
+        [global::System.Configuration.DefaultSettingValueAttribute("DEMOSINF")]
         public string Company {
             get {
                 return ((string)(this["Company"]));
@@ -34,7 +34,7 @@ namespace CompanyDashboard.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c_monteiro")]
+        [global::System.Configuration.DefaultSettingValueAttribute("sinf")]
         public string User {
             get {
                 return ((string)(this["User"]));
@@ -43,7 +43,7 @@ namespace CompanyDashboard.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("12345678")]
+        [global::System.Configuration.DefaultSettingValueAttribute("sinf")]
         public string Password {
             get {
                 return ((string)(this["Password"]));

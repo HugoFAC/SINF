@@ -51,6 +51,17 @@ namespace CompanyDashboard.Lib_Primavera.Model
             set;
         }
 
+        public string Tipodoc
+        {
+            get;
+            set;
+        }
+        public string TipoEntidade
+        {
+            get;
+            set;
+        }
+
         public List<Model.LinhaDocCompra> LinhasDoc
         {
             get;

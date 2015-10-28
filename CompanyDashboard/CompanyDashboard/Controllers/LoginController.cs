@@ -12,9 +12,9 @@ namespace CompanyDashboard.Controllers
     public class LoginController : ApiController
     {
         //
-        // GET: /Login/
+        
 
-        // GET api/Login/post   
+        // POST api/Login/   
         public Boolean Post(Lib_Primavera.Model.Login login)
         {
             return Lib_Primavera.PriIntegration.Login(login);

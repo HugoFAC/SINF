@@ -398,8 +398,8 @@ namespace CompanyDashboard.Lib_Primavera
                     myGR.set_Entidade(dc.Entidade);
                     myGR.set_NumDocExterno(dc.NumDocExterno);
                     myGR.set_Serie(dc.Serie);
-                    myGR.set_Tipodoc("VGR");
-                    myGR.set_TipoEntidade("F");
+                    myGR.set_Tipodoc(dc.Tipodoc);
+                    myGR.set_TipoEntidade(dc.TipoEntidade);
                     // Linhas do documento para a lista de linhas
                     lstlindv = dc.LinhasDoc;
                     PriEngine.Engine.Comercial.Compras.PreencheDadosRelacionados(myGR, rl);
@@ -460,8 +460,8 @@ namespace CompanyDashboard.Lib_Primavera
                     //myEnc.set_DataDoc(dv.Data);
                     myEnc.set_Entidade(dv.Entidade);
                     myEnc.set_Serie(dv.Serie);
-                    myEnc.set_Tipodoc("ECL");
-                    myEnc.set_TipoEntidade("C");
+                    myEnc.set_Tipodoc(dv.Tipodoc);
+                    myEnc.set_TipoEntidade(dv.TipoEntidade);
                     // Linhas do documento para a lista de linhas
                     lstlindv = dv.LinhasDoc;
                     PriEngine.Engine.Comercial.Vendas.PreencheDadosRelacionados(myEnc, rl);
