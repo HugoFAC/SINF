@@ -18,7 +18,7 @@ namespace CompanyDashboard.Controllers
 
         public IEnumerable<Lib_Primavera.Model.DocVenda> Get()
         {
-            return Lib_Primavera.PriIntegration.Encomendas_List();
+            return Lib_Primavera.PriIntegration.Vendas_List();
         }
 
 
@@ -36,6 +36,24 @@ namespace CompanyDashboard.Controllers
             {
                 return docvenda;
             }
+        }
+
+        // GET api/DocVenda/month/6   
+        public IEnumerable<Lib_Primavera.Model.DocVenda> Get(string id, string param)
+        {
+            int n;
+            bool isNumeric = int.TryParse(param, out n);
+            if (isNumeric && id == "month")
+            {
+                return Lib_Primavera.PriIntegration.Vendas_List(id, n);
+            }
+            else
+            {
+                throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+            throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.NotFound));
         }
 
 
