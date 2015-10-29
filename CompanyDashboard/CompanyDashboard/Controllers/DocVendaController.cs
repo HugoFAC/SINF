@@ -86,7 +86,7 @@ namespace CompanyDashboard.Controllers
 
             try
             {
-                erro = Lib_Primavera.PriIntegration.UpdCliente
+                erro = Lib_Primavera.PriIntegration.UpdDocVenda(dv);
                 if (erro.Erro == 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, erro.Descricao);
@@ -114,7 +114,7 @@ namespace CompanyDashboard.Controllers
             try
             {
 
-                erro = Lib_Primavera.PriIntegration.DelCliente(id);
+                erro = Lib_Primavera.PriIntegration.DelDocVenda(id);
 
                 if (erro.Erro == 0)
                 {

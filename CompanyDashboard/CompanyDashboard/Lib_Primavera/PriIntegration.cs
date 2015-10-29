@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Diagnostics;
 using Interop.ErpBS800;
 using Interop.StdPlatBS800;
 using Interop.StdBE800;
@@ -459,9 +460,9 @@ namespace CompanyDashboard.Lib_Primavera
                     // Atribui valores ao cabecalho do doc
                     myEnc.set_DataDoc(dv.Data);
                     myEnc.set_Entidade(dv.Entidade);
+                    myEnc.set_Filial(dv.Filial);
                     myEnc.set_Serie(dv.Serie);
                     myEnc.set_Tipodoc(dv.Tipodoc);
-                    myEnc.set_TipoEntidade(dv.TipoEntidade);
                     // Linhas do documento para a lista de linhas
                     lstlindv = dv.LinhasDoc;
                     PriEngine.Engine.Comercial.Vendas.PreencheDadosRelacionados(myEnc, rl);
@@ -513,15 +514,17 @@ namespace CompanyDashboard.Lib_Primavera
 
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                objListCab = PriEngine.Engine.Consulta("SELECT id, Entidade, Data, NumDoc, TotalMerc, Serie From CabecDoc");
+                objListCab = PriEngine.Engine.Consulta("SELECT id, Entidade, Filial, Tipodoc, Data, NumDoc, TotalMerc, Serie From CabecDoc");
                 while (!objListCab.NoFim())
                 {
                     dv = new Model.DocVenda();
                     dv.id = objListCab.Valor("id");
                     dv.Entidade = objListCab.Valor("Entidade");
+                    dv.Filial = objListCab.Valor("Filial");
                     dv.NumDoc = objListCab.Valor("NumDoc");
                     dv.Data = objListCab.Valor("Data");
                     dv.TotalMerc = objListCab.Valor("TotalMerc");
+                    dv.Tipodoc = objListCab.Valor("Tipodoc");
                     dv.Serie = objListCab.Valor("Serie");
                     objListLin = PriEngine.Engine.Consulta("SELECT idCabecDoc, Artigo, Descricao, Quantidade, Unidade, PrecUnit, Desconto1, TotalILiquido, PrecoLiquido from LinhasDoc where IdCabecDoc='" + dv.id + "' order By NumLinha");
                     listlindv = new List<Model.LinhaDocVenda>();
@@ -566,15 +569,17 @@ namespace CompanyDashboard.Lib_Primavera
                 DateTime today = DateTime.Now;
                 DateTime sixMonthsBack = today.AddMonths(0 - month);
                 string newdate = sixMonthsBack.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                objListCab = PriEngine.Engine.Consulta("SELECT id, Entidade, Data, NumDoc, TotalMerc, Serie From CabecDoc WHERE Data >= '" + newdate + "'");
+                objListCab = PriEngine.Engine.Consulta("SELECT id, Entidade, Filial, Tipodoc, Data, NumDoc, TotalMerc, Serie From CabecDoc WHERE Data >= '" + newdate + "'");
                 while (!objListCab.NoFim())
                 {
                     dv = new Model.DocVenda();
                     dv.id = objListCab.Valor("id");
                     dv.Entidade = objListCab.Valor("Entidade");
+                    dv.Filial = objListCab.Valor("Filial");
                     dv.NumDoc = objListCab.Valor("NumDoc");
                     dv.Data = objListCab.Valor("Data");
                     dv.TotalMerc = objListCab.Valor("TotalMerc");
+                    dv.Tipodoc = objListCab.Valor("Tipodoc");
                     dv.Serie = objListCab.Valor("Serie");
                     objListLin = PriEngine.Engine.Consulta("SELECT idCabecDoc, Artigo, Descricao, Quantidade, Unidade, PrecUnit, Desconto1, TotalILiquido, PrecoLiquido from LinhasDoc where IdCabecDoc='" + dv.id + "' order By NumLinha");
                     listlindv = new List<Model.LinhaDocVenda>();
@@ -618,9 +623,9 @@ namespace CompanyDashboard.Lib_Primavera
 
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                
 
-                string st = "SELECT id, Filial, Entidade, Data, NumDoc, TotalMerc, Serie From CabecDoc where NumDoc='" + numdoc + "'";
+
+                string st = "SELECT id, Entidade, Filial, Tipodoc, Data, NumDoc, TotalMerc, Serie From CabecDoc where NumDoc='" + numdoc + "'";
                 objListCab = PriEngine.Engine.Consulta(st);
                 dv = new Model.DocVenda();
                 dv.id = objListCab.Valor("id");
@@ -628,6 +633,7 @@ namespace CompanyDashboard.Lib_Primavera
                 dv.Entidade = objListCab.Valor("Entidade");
                 dv.NumDoc = objListCab.Valor("NumDoc");
                 dv.Data = objListCab.Valor("Data");
+                dv.Tipodoc = objListCab.Valor("Tipodoc");
                 dv.TotalMerc = objListCab.Valor("TotalMerc");
                 dv.Serie = objListCab.Valor("Serie");
                 objListLin = PriEngine.Engine.Consulta("SELECT idCabecDoc, Artigo, Descricao, Quantidade, Unidade, PrecUnit, Desconto1, TotalILiquido, PrecoLiquido from LinhasDoc where IdCabecDoc='" + dv.id + "' order By NumLinha");
@@ -671,6 +677,7 @@ namespace CompanyDashboard.Lib_Primavera
                     if (PriEngine.Engine.Comercial.Vendas.Existe(dv.Filial, dv.Tipodoc, dv.Serie, dv.NumDoc) == false)
                     {
                         erro.Erro = 1;
+                        System.Diagnostics.Debug.WriteLine("FODADSSE  " + dv.Filial + "  " + dv.Tipodoc + "  " + dv.Serie + "  " + dv.NumDoc);
                         erro.Descricao = "O documento de venda não existe";
                         return erro;
                     }
@@ -682,7 +689,6 @@ namespace CompanyDashboard.Lib_Primavera
                         objDocV.set_EmModoEdicao(true);
 
                         objDocV.set_Entidade(dv.Entidade);
-                        objDocV.set_TipoEntidade(dv.TipoEntidade);
                         objDocV.set_TotalMerc(dv.TotalMerc);
                         objDocV.set_DataDoc(dv.Data);
                         objDocV.set_ID(dv.id);
@@ -724,7 +730,51 @@ namespace CompanyDashboard.Lib_Primavera
 
         }
 
-        #endregion DocsVenda
+        public static Lib_Primavera.Model.RespostaErro DelDocVenda(string id)
+        {
 
+            Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
+            GcpBECliente objCli = new GcpBECliente();
+
+
+            try
+            {
+
+                if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+                {
+                    if (PriEngine.Engine.Comercial.Vendas.ExisteID(id) == false)
+                    {
+                        erro.Erro = 1;
+                        erro.Descricao = "O documento de venda não existe";
+                        return erro;
+                    }
+                    else
+                    {
+                        Lib_Primavera.Model.DocVenda tempdoc = Venda_Get(id);
+                        PriEngine.Engine.Comercial.Vendas.Remove(tempdoc.Filial, tempdoc.Tipodoc, tempdoc.Serie, tempdoc.NumDoc);
+                        erro.Erro = 0;
+                        erro.Descricao = "Sucesso";
+                        return erro;
+                    }
+                }
+
+                else
+                {
+                    erro.Erro = 1;
+                    erro.Descricao = "Erro ao abrir a empresa";
+                    return erro;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                erro.Erro = 1;
+                erro.Descricao = ex.Message;
+                return erro;
+            }
+
+        }
+
+        #endregion DocsVenda
     }
 }
