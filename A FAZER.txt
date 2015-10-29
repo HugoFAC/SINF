@@ -1,0 +1,31 @@
+VENDAS/ ENCOMENDAS
+- Listar vendas ( Periodo tempo?)
+- Valor total c/ ou sem IVA
+- Acresce venda/encomenda
+- Editar
+
+Artigos
+- Lista inventário
+- Adicionar
+- Editar
+- Apagar
+
+Compras
+- Listar compras ( Periodo tempo?)
+- Valor total c/ ou sem IVA
+- Acresce compra
+- Editar
+
+Fornecedor | Cliente
+- 	     Criar
+-            Editar
+-       Listar
+
+Accounting
+- Dinheiro a receber
+- Dinheiro a pagar
+- Lucro determinado periodo
+
+Factura
+- Criar
+- Lista
