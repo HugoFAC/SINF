@@ -316,6 +316,142 @@ namespace CompanyDashboard.Lib_Primavera
 
         }
 
+        public static Lib_Primavera.Model.RespostaErro InsereArtigoObj(Model.Artigo art)
+        {
+
+            Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
+
+
+            GcpBEArtigo myArt = new GcpBEArtigo();
+            try
+            {
+                if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+                {
+
+                    myArt.set_Artigo(art.CodArtigo);
+                    myArt.set_Descricao(art.DescArtigo);
+
+                    PriEngine.Engine.Comercial.Artigos.Actualiza(myArt);
+
+                    erro.Erro = 0;
+                    erro.Descricao = "Sucesso";
+                    return erro;
+                }
+                else
+                {
+                    erro.Erro = 1;
+                    erro.Descricao = "Erro ao abrir empresa";
+                    return erro;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                erro.Erro = 1;
+                erro.Descricao = ex.Message;
+                return erro;
+            }
+
+
+        }
+
+        public static Lib_Primavera.Model.RespostaErro UpdArtigo(Lib_Primavera.Model.Artigo artigo)
+        {
+            Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
+
+
+            GcpBEArtigo objArt = new GcpBEArtigo();
+
+            try
+            {
+
+                if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+                {
+
+                    if (PriEngine.Engine.Comercial.Artigos.Existe(artigo.CodArtigo) == false)
+                    {
+                        erro.Erro = 1;
+                        erro.Descricao = "O cliente não existe";
+                        return erro;
+                    }
+                    else
+                    {
+
+                        objArt = PriEngine.Engine.Comercial.Artigos.Edita(artigo.CodArtigo);
+                        objArt.set_EmModoEdicao(true);
+
+                        objArt.set_Descricao(artigo.DescArtigo);
+
+                        PriEngine.Engine.Comercial.Artigos.Actualiza(objArt);
+
+                        erro.Erro = 0;
+                        erro.Descricao = "Sucesso";
+                        return erro;
+                    }
+                }
+                else
+                {
+                    erro.Erro = 1;
+                    erro.Descricao = "Erro ao abrir a empresa";
+                    return erro;
+
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                erro.Erro = 1;
+                erro.Descricao = ex.Message;
+                return erro;
+            }
+
+        }
+        public static Lib_Primavera.Model.RespostaErro DelArtigo(string CodArtigo)
+        {
+
+            Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
+            GcpBEArtigo objArt = new GcpBEArtigo();
+
+
+            try
+            {
+
+                if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+                {
+                    if (PriEngine.Engine.Comercial.Artigos.Existe(CodArtigo) == false)
+                    {
+                        erro.Erro = 1;
+                        erro.Descricao = "O cliente não existe";
+                        return erro;
+                    }
+                    else
+                    {
+
+                        PriEngine.Engine.Comercial.Artigos.Remove(CodArtigo);
+                        erro.Erro = 0;
+                        erro.Descricao = "Sucesso";
+                        return erro;
+                    }
+                }
+
+                else
+                {
+                    erro.Erro = 1;
+                    erro.Descricao = "Erro ao abrir a empresa";
+                    return erro;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                erro.Erro = 1;
+                erro.Descricao = ex.Message;
+                return erro;
+            }
+
+        }
+
         #endregion Artigo
 
    

@@ -17,9 +17,9 @@ Compras
 - Editar
 
 Fornecedor | Cliente
-- 	     Criar
--            Editar
--       Listar
+  	     Criar
+            Editar
+       Listar
 
 Accounting
 - Dinheiro a receber
