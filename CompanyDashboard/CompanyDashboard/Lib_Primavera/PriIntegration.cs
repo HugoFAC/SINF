@@ -440,7 +440,7 @@ namespace CompanyDashboard.Lib_Primavera
 
         #region DocsVenda
 
-        public static Model.RespostaErro Encomendas_New(Model.DocVenda dv)
+        public static Model.RespostaErro Vendas_New(Model.DocVenda dv)
         {
             Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
             GcpBEDocumentoVenda myEnc = new GcpBEDocumentoVenda();
@@ -457,7 +457,7 @@ namespace CompanyDashboard.Lib_Primavera
                 if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
                 {
                     // Atribui valores ao cabecalho do doc
-                    //myEnc.set_DataDoc(dv.Data);
+                    myEnc.set_DataDoc(dv.Data);
                     myEnc.set_Entidade(dv.Entidade);
                     myEnc.set_Serie(dv.Serie);
                     myEnc.set_Tipodoc(dv.Tipodoc);
@@ -606,7 +606,7 @@ namespace CompanyDashboard.Lib_Primavera
 
        
 
-        public static Model.DocVenda Encomenda_Get(string numdoc)
+        public static Model.DocVenda Venda_Get(string numdoc)
         {
             
             
@@ -620,10 +620,11 @@ namespace CompanyDashboard.Lib_Primavera
             {
                 
 
-                string st = "SELECT id, Entidade, Data, NumDoc, TotalMerc, Serie From CabecDoc where NumDoc='" + numdoc + "'";
+                string st = "SELECT id, Filial, Entidade, Data, NumDoc, TotalMerc, Serie From CabecDoc where NumDoc='" + numdoc + "'";
                 objListCab = PriEngine.Engine.Consulta(st);
                 dv = new Model.DocVenda();
                 dv.id = objListCab.Valor("id");
+                dv.Filial = objListCab.Valor("Filial");
                 dv.Entidade = objListCab.Valor("Entidade");
                 dv.NumDoc = objListCab.Valor("NumDoc");
                 dv.Data = objListCab.Valor("Data");
@@ -652,6 +653,75 @@ namespace CompanyDashboard.Lib_Primavera
                 return dv;
             }
             return null;
+        }
+
+        public static Lib_Primavera.Model.RespostaErro UpdDocVenda(Lib_Primavera.Model.DocVenda dv)
+        {
+            Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
+
+
+            GcpBEDocumentoVenda objDocV = new GcpBEDocumentoVenda();
+
+            try
+            {
+
+                if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+                {
+
+                    if (PriEngine.Engine.Comercial.Vendas.Existe(dv.Filial, dv.Tipodoc, dv.Serie, dv.NumDoc) == false)
+                    {
+                        erro.Erro = 1;
+                        erro.Descricao = "O documento de venda não existe";
+                        return erro;
+                    }
+                    else
+                    {
+
+                        objDocV = PriEngine.Engine.Comercial.Vendas.Edita(dv.Filial, dv.Tipodoc, dv.Serie, dv.NumDoc);
+
+                        objDocV.set_EmModoEdicao(true);
+
+                        objDocV.set_Entidade(dv.Entidade);
+                        objDocV.set_TipoEntidade(dv.TipoEntidade);
+                        objDocV.set_TotalMerc(dv.TotalMerc);
+                        objDocV.set_DataDoc(dv.Data);
+                        objDocV.set_ID(dv.id);
+
+                        List<Model.LinhaDocVenda> listlindv = new List<Model.LinhaDocVenda>();
+                        listlindv = dv.LinhasDoc;
+                        GcpBELinhasDocumentoVenda linhas = new GcpBELinhasDocumentoVenda();
+                        for(int i = 0; i < listlindv.Count; i++){
+                            GcpBELinhaDocumentoVenda linha = new GcpBELinhaDocumentoVenda(listlindv.ElementAt(i));
+                            linhas.Insere(linha);
+                        }
+
+                        objDocV.set_Linhas(linhas);
+
+
+                        PriEngine.Engine.Comercial.Vendas.Actualiza(objDocV);
+
+                        erro.Erro = 0;
+                        erro.Descricao = "Sucesso";
+                        return erro;
+                    }
+                }
+                else
+                {
+                    erro.Erro = 1;
+                    erro.Descricao = "Erro ao abrir a empresa";
+                    return erro;
+
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                erro.Erro = 1;
+                erro.Descricao = ex.Message;
+                return erro;
+            }
+
         }
 
         #endregion DocsVenda

@@ -20,6 +20,12 @@ namespace CompanyDashboard.Lib_Primavera.Model
             set;
         }
 
+        public string Filial
+        {
+            get;
+            set;
+        }
+
         public int NumDoc
         {
             get;

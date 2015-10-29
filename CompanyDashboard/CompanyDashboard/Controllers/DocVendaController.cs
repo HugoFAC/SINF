@@ -25,7 +25,7 @@ namespace CompanyDashboard.Controllers
         // GET api/DocVenda/5    
         public Lib_Primavera.Model.DocVenda Get(string id)
         {
-            Lib_Primavera.Model.DocVenda docvenda = Lib_Primavera.PriIntegration.Encomenda_Get(id);
+            Lib_Primavera.Model.DocVenda docvenda = Lib_Primavera.PriIntegration.Venda_Get(id);
             if (docvenda == null)
             {
                 throw new HttpResponseException(
@@ -60,7 +60,7 @@ namespace CompanyDashboard.Controllers
         public HttpResponseMessage Post(Lib_Primavera.Model.DocVenda dv)
         {
             Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-            erro = Lib_Primavera.PriIntegration.Encomendas_New(dv);
+            erro = Lib_Primavera.PriIntegration.Vendas_New(dv);
 
             if (erro.Erro == 0)
             {
@@ -79,14 +79,14 @@ namespace CompanyDashboard.Controllers
         }
 
 
-        public HttpResponseMessage Put(int id, Lib_Primavera.Model.Cliente cliente)
+        public HttpResponseMessage Put(int id, Lib_Primavera.Model.DocVenda dv)
         {
 
             Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
 
             try
             {
-                erro = Lib_Primavera.PriIntegration.UpdCliente(cliente);
+                erro = Lib_Primavera.PriIntegration.UpdCliente
                 if (erro.Erro == 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, erro.Descricao);
