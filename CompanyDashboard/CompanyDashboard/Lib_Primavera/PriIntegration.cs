@@ -249,7 +249,76 @@ namespace CompanyDashboard.Lib_Primavera
 
         #endregion Cliente;   // -----------------------------  END   CLIENTE    -----------------------
 
+        #region Fornecedor
 
+        public static List<Model.Fornecedor> ListaFornecedores()
+        {
+
+
+            StdBELista objList;
+
+            List<Model.Fornecedor> listFornecedores = new List<Model.Fornecedor>();
+
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+            {
+
+                //objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
+
+                objList = PriEngine.Engine.Consulta("SELECT Fornecedor, Nome, Moeda, NumContrib as NumContribuinte, EnderecoWeb AS website FROM  Fornecedores");
+
+
+                while (!objList.NoFim())
+                {
+                    listFornecedores.Add(new Model.Fornecedor
+                    {
+                        CodFornecedor = objList.Valor("Fornecedor"),
+                        NomeFornecedor = objList.Valor("Nome"),
+                        Moeda = objList.Valor("Moeda"),
+                        NumContribuinte = objList.Valor("NumContribuinte"),
+                        EnderecoWeb = objList.Valor("website")
+                    });
+                    objList.Seguinte();
+
+                }
+
+                return listFornecedores;
+            }
+            else
+                return null;
+        }
+
+        public static Lib_Primavera.Model.Fornecedor GetFornecedor(string codFornecedor)
+        {
+
+
+            GcpBEFornecedor objFor = new GcpBEFornecedor();
+
+
+            Model.Fornecedor myFor = new Model.Fornecedor();
+
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+            {
+
+                if (PriEngine.Engine.Comercial.Fornecedores.Existe(codFornecedor) == true)
+                {
+                    objFor = PriEngine.Engine.Comercial.Fornecedores.Edita(codFornecedor);
+                    myFor.CodFornecedor = objFor.get_Fornecedor();
+                    myFor.NomeFornecedor = objFor.get_Nome();
+                    myFor.Moeda = objFor.get_Moeda();
+                    myFor.NumContribuinte = objFor.get_NumContribuinte();
+                    myFor.EnderecoWeb = objFor.get_EnderecoWeb();
+                    return myFor;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+                return null;
+        }
+
+        #endregion Fornecedor
         #region Artigo
 
         public static Lib_Primavera.Model.Artigo GetArtigo(string codArtigo)

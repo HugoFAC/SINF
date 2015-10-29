@@ -18,6 +18,5 @@ namespace CompanyDashboard.Lib_Primavera.Model
             get;
             set;
         }
-
     }
 }

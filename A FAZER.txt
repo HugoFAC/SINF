@@ -5,10 +5,10 @@ VENDAS/ ENCOMENDAS
 - Editar
 
 Artigos
-- Lista inventário
-- Adicionar
-- Editar
-- Apagar
+X Lista inventário
+X Adicionar
+X Editar
+X Apagar
 
 Compras
 - Listar compras ( Periodo tempo?)
@@ -18,7 +18,7 @@ Compras
 
 Fornecedor | Cliente
   	     Criar
-            Editar
+             Editar
        Listar
 
 Accounting
