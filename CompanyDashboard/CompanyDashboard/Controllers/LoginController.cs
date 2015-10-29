@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -20,6 +21,14 @@ namespace CompanyDashboard.Controllers
             return Lib_Primavera.PriIntegration.Login(login);
 
         }
+        // GET api/Login/ 
+        public Boolean GET(string id,string param)
+        {
+            Lib_Primavera.Model.Login login = new Lib_Primavera.Model.Login();
+            login.Password = param;
+            login.Username = id;
+            return Lib_Primavera.PriIntegration.Login(login);
 
+        }
     }
 }
