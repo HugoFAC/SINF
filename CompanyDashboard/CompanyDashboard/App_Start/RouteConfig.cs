@@ -18,6 +18,7 @@ namespace CompanyDashboard
                 url: "{controller}/{action}/{id}/{param}/{param2}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional, param = UrlParameter.Optional, param2 = UrlParameter.Optional }
             );
+
         }
     }
 }

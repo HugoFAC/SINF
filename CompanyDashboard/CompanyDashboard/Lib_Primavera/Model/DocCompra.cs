@@ -20,7 +20,6 @@ namespace CompanyDashboard.Lib_Primavera.Model
             set;
         }
 
-
         public string Entidade
         {
             get;
@@ -52,11 +51,6 @@ namespace CompanyDashboard.Lib_Primavera.Model
         }
 
         public string Tipodoc
-        {
-            get;
-            set;
-        }
-        public string TipoEntidade
         {
             get;
             set;

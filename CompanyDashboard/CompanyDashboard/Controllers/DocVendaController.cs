@@ -23,20 +23,38 @@ namespace CompanyDashboard.Controllers
 
 
         // GET api/DocVenda/5    
-        public Lib_Primavera.Model.DocVenda Get(string id)
+        public object Get(string id)
         {
-            Lib_Primavera.Model.DocVenda docvenda = Lib_Primavera.PriIntegration.Venda_Get(id);
-            if (docvenda == null)
+            if (id == "total")
             {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
+                return Lib_Primavera.PriIntegration.Vendas_Total();
+            }
+            else 
+            {
+                int n;
+                bool isNumeric = int.TryParse(id, out n);
+                if (isNumeric)
+                {
+                    Lib_Primavera.Model.DocVenda docvenda = Lib_Primavera.PriIntegration.Venda_Get(id);
+                    if (docvenda == null)
+                    {
+                        throw new HttpResponseException(
+                                Request.CreateResponse(HttpStatusCode.NotFound));
 
+                    }
+                    else
+                    {
+                        return docvenda;
+                    }
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest);
+                }
             }
-            else
-            {
-                return docvenda;
-            }
+
         }
+
 
         // GET api/DocVenda/month/6   
         public IEnumerable<Lib_Primavera.Model.DocVenda> Get(string id, string param)

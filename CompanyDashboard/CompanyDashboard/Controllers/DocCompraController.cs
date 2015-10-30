@@ -16,29 +16,61 @@ namespace CompanyDashboard.Controllers
 
         public IEnumerable<Lib_Primavera.Model.DocCompra> Get()
         {
-            return Lib_Primavera.PriIntegration.VGR_List();
+            return Lib_Primavera.PriIntegration.Compras_List();
         }
 
-        /*
+        
         // GET api/cliente/5    
-        public Lib_Primavera.Model.DocCompra Get(string id)
+        public object Get(string id)
         {
-            Lib_Primavera.Model.DocVenda doccompra = Lib_Primavera.Comercial.GR_List(id);
-            if (docvenda == null)
+            if (id == "total")
             {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
-
+                return Lib_Primavera.PriIntegration.Compras_Total();
             }
             else
             {
-                return docvenda;
+                int n;
+                bool isNumeric = int.TryParse(id, out n);
+                if (isNumeric)
+                {
+                    Lib_Primavera.Model.DocCompra doccompra = Lib_Primavera.PriIntegration.Compra_Get(id);
+                    if (doccompra == null)
+                    {
+                        throw new HttpResponseException(
+                                Request.CreateResponse(HttpStatusCode.NotFound));
+
+                    }
+                    else
+                    {
+                        return doccompra;
+                    }
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest);
+                }
             }
+
         }
-        */
 
+        public IEnumerable<Lib_Primavera.Model.DocCompra> Get(string id, string param)
+        {
+            int n;
+            bool isNumeric = int.TryParse(param, out n);
+            if (isNumeric && id == "month")
+            {
+                return Lib_Primavera.PriIntegration.Compras_List(id, n);
+            }
+            else
+            {
+                throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+            throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.NotFound));
+        }
 
-        public HttpResponseMessage Post(Lib_Primavera.Model.DocCompra dc)
+        /*public HttpResponseMessage Post(Lib_Primavera.Model.DocCompra dc)
         {
             Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
             erro = Lib_Primavera.PriIntegration.VGR_New(dc);
@@ -57,7 +89,7 @@ namespace CompanyDashboard.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-        }
+        }*/
 
     }
 }
