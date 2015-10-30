@@ -669,14 +669,14 @@ namespace CompanyDashboard.Lib_Primavera
             {
 
 
-                string st = "SELECT id, Entidade, NumDocExterno, Tipodoc, Data, NumDoc, TotalMerc, Serie From CabecCompras where NumDoc='" + numdoc + "'";
+                string st = "SELECT id, Entidade, NumDocExterno, Tipodoc, DataDoc, NumDoc, TotalMerc, Serie From CabecCompras where NumDoc='" + numdoc + "'";
                 objListCab = PriEngine.Engine.Consulta(st);
                 dc = new Model.DocCompra();
                 dc.id = objListCab.Valor("id");
                 dc.Entidade = objListCab.Valor("Entidade");
                 dc.NumDocExterno = objListCab.Valor("NumDocExterno");
                 dc.NumDoc = objListCab.Valor("NumDoc");
-                dc.Data = objListCab.Valor("Data");
+                dc.Data = objListCab.Valor("DataDoc");
                 dc.Tipodoc = objListCab.Valor("Tipodoc");
                 dc.TotalMerc = objListCab.Valor("TotalMerc");
                 dc.Serie = objListCab.Valor("Serie");
