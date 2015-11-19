@@ -1,20 +1,37 @@
-﻿<div id="body">
+﻿@{
+    var client = new WebClient();
+    var json = client.DownloadString("http://localhost:49413/api/doccompra/total");
+    var search = Json.Decode(json);
+    var json2 = client.DownloadString("http://localhost:49413/api/docvenda/total");
+    var search2 = Json.Decode(json2);
+}
+
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+
+<div id="myfirstchart" style="height: 250px;"></div>
+
+
+
+<div id="body">
     <section class="featured">
         <div class="content-wrapper">
             <hgroup class="title">
                 <h1>Welcome to ASP.NET Web API!</h1>
                 <h2>Modify the code in this template to jump-start your ASP.NET Web API development.</h2>
             </hgroup>
-            <p>
-                ASP.NET Web API allows you to expose your applications, data and services to the
-                web directly over HTTP.
+           
+
+          
+            <p id="valor-compra" data-valor-compra="@search">
+                @search <br />
             </p>
-            <p>
-                To learn more about ASP.NET Web API visit the
-                <a href="http://go.microsoft.com/fwlink/?LinkID=238195" title="ASP.NET Web API Website">ASP.NET Web API Website</a>.
-                The page features <mark>videos, tutorials, and samples</mark> to help you get the most from ASP.NET Web API.
-                If you have any questions about ASP.NET Web API, visit
-                <a href="http://go.microsoft.com/fwlink/?LinkID=238196" title="ASP.NET Web API Forum">our forums</a>.
+
+            <p id="valor-venda" data-valor-venda="@search2">
+                <strong>@search2</strong><br />
             </p>
         </div>
     </section>
@@ -43,3 +60,20 @@
         </ol>
     </section>
 </div>
+
+
+<script>
+    var valorcompra = Math.abs(parseInt(document.getElementById("valor-compra").getAttribute("data-valor-compra")));
+    var valorvenda = Math.abs(parseInt(document.getElementById("valor-venda").getAttribute("data-valor-venda")));
+    console.log(valorcompra);
+    new Morris.Donut({
+        // ID of the element in which to draw the chart.
+        element: 'myfirstchart',
+        // Chart data records -- each entry in this array corresponds to a point on
+        // the chart.
+        data: [
+            { label: "Valor de Vendas", value: valorcompra },
+            { label: "Valor de Compras", value: valorvenda }
+        ]
+    });
+</script>
