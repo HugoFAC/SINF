@@ -234,11 +234,13 @@
         ],
         xkey: 'y',
         ykeys: ['a', 'b'],
+        resize: true,
         labels: ['Series A', 'Series B']
     });
 
     Morris.Donut({
         element: 'secondchart',
+        resize: true,
         data: [
           { label: "Download Sales", value: 12 },
           { label: "In-Store Sales", value: 30 },
@@ -248,6 +250,7 @@
 
     Morris.Donut({
         element: 'thirdchart',
+        resize: true,
         data: [
           { label: "Download Sales", value: 120 },
           { label: "In-Store Sales", value: 30 },

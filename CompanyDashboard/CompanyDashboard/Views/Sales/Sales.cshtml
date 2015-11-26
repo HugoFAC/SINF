@@ -2,4 +2,148 @@
     ViewBag.Title = "Sales";
 }
 
-<h2>Sales</h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="main">
+            <h1 class="page-header">Dashboard</h1>
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    <h2>Produtos</h2>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Vendido (x)</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Produto 1</td>
+                                    <td>123</td>
+                                    <td>21</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 2</td>
+                                    <td>220</td>
+                                    <td>41</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 3</td>
+                                    <td>64</td>
+                                    <td>54</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 4</td>
+                                    <td>145</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 5</td>
+                                    <td>24</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <h2>Produtos vendidos recentemente</h2>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Vendido (x)</th>
+                                        <th>Data</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Produto 1</td>
+                                        <td>250</td>
+                                        <td>21/11/2015</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Produto 2</td>
+                                        <td>220</td>
+                                        <td>11/11/2015</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Produto 4</td>
+                                        <td>214</td>
+                                        <td>10/11/2015</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Produto 4</td>
+                                        <td>145</td>
+                                        <td>29/10/2015</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Produto 5</td>
+                                        <td>24</td>
+                                        <td>23/10/2015</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-12">
+                            <h2>Produtos mais vendidos</h2>
+                            <div id="firstchart"></div>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <h2>Cenas</h2>
+                            <div id="secondchart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    Morris.Bar({
+        element: 'firstchart',
+        data: [
+          { y: 'Produto 1', a: 123},
+          { y: 'Produto 2', a: 220},
+          { y: 'Produto 3', a: 64},
+          { y: 'Produto 4', a: 145},
+          { y: 'Produto 5', a: 24}
+        ],
+        xkey: 'y',
+        ykeys: ['a'],
+        hideHover: true,
+        resize: true,
+        labels: ['Número de vendas']
+    });
+
+    Morris.Area({
+        element: 'secondchart',
+        hideHover: true,
+        resize: true,
+        data: [
+          { y: '2006', a: 100, b: 90 },
+          { y: '2007', a: 75, b: 65 },
+          { y: '2008', a: 50, b: 40 },
+          { y: '2009', a: 75, b: 65 },
+          { y: '2010', a: 50, b: 40 },
+          { y: '2011', a: 75, b: 65 },
+          { y: '2012', a: 100, b: 90 }
+        ],
+        xkey: 'y',
+        ykeys: ['a', 'b'],
+        labels: ['Series A', 'Series B']
+    });
+
+</script>
