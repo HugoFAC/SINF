@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using CompanyDashboard.Lib_Primavera.Model;
-using System.Globalization;
 
 namespace CompanyDashboard.Controllers
 {
@@ -21,7 +20,7 @@ namespace CompanyDashboard.Controllers
         }
 
         
-        // GET api/doccompra/5    
+        // GET api/cliente/5    
         public object Get(string id)
         {
             if (id == "total")
@@ -54,11 +53,12 @@ namespace CompanyDashboard.Controllers
 
         }
 
+        // GET api/Doccompra/months/x
         public IEnumerable<Lib_Primavera.Model.DocCompra> Get(string id, string param)
         {
             int n;
             bool isNumeric = int.TryParse(param, out n);
-            if (isNumeric && id == "month")
+            if (isNumeric && id == "months")
             {
                 return Lib_Primavera.PriIntegration.Compras_List(id, n);
             }
@@ -71,29 +71,14 @@ namespace CompanyDashboard.Controllers
                         Request.CreateResponse(HttpStatusCode.NotFound));
         }
 
+        // GET api/Doccompra/week/x
+        // GET api/Doccompra/year/x
+        // GET api/Doccompra/month/x
         public IEnumerable<Lib_Primavera.Model.DocCompra> Get(string id, string param, string param2)
         {
-            int n;
-            bool isNumeric = int.TryParse(param, out n);
-            bool isNumeric2 = int.TryParse(param2, out n);
-
-            if (id == "data")
+            if (id == "month" || id == "week" || id == "year")
             {
-                string[] formats = {"d-M-yyyy", "dd-MM-yyyy", "d-MM-yyyy", "dd-M-yyyy"};
-                DateTime dateValue;
-                DateTime dateValue2;
-
-                if (DateTime.TryParseExact(param, formats, new CultureInfo("en-US"), DateTimeStyles.None, out dateValue) 
-                    && DateTime.TryParseExact(param2, formats, new CultureInfo("en-US"), DateTimeStyles.None, out dateValue2))
-                {
-                    return Lib_Primavera.PriIntegration.Compras_List(id, dateValue, dateValue2);
-                }
-                else
-                {
-                    throw new HttpResponseException(
-                       Request.CreateResponse(HttpStatusCode.BadRequest));
-                }
-
+                return Lib_Primavera.PriIntegration.Compras_List_period(id, param, param2);
             }
             else
             {

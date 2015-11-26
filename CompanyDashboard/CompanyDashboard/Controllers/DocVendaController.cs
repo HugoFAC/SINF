@@ -56,12 +56,12 @@ namespace CompanyDashboard.Controllers
         }
 
 
-        // GET api/DocVenda/month/6   
+        // GET api/DocVenda/months/6   
         public IEnumerable<Lib_Primavera.Model.DocVenda> Get(string id, string param)
         {
             int n;
             bool isNumeric = int.TryParse(param, out n);
-            if (isNumeric && id == "month")
+            if (isNumeric && id == "months")
             {
                 return Lib_Primavera.PriIntegration.Vendas_List(id, n);
             }
@@ -73,7 +73,23 @@ namespace CompanyDashboard.Controllers
             throw new HttpResponseException(
                         Request.CreateResponse(HttpStatusCode.NotFound));
         }
-
+        // GET api/DocVenda/week/x
+        // GET api/DocVenda/year/x
+        // GET api/DocVenda/month/x
+        public IEnumerable<Lib_Primavera.Model.DocVenda> Get(string id, string param,string param2)
+        {
+            if (id == "month" || id == "week" || id == "year")
+            {
+                return Lib_Primavera.PriIntegration.Vendas_List_period(id, param,param2);
+            }
+            else
+            {
+                throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+            throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.NotFound));
+        }
 
         public HttpResponseMessage Post(Lib_Primavera.Model.DocVenda dv)
         {
