@@ -6,16 +6,8 @@
     var search2 = Json.Decode(json2);
 }
 
-<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-
-
-<div id="myfirstchart" style="height: 250px;"></div>
-
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -25,40 +17,201 @@
             </button>
             <a class="navbar-brand" href="#">Project name</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Help</a></li>
             </ul>
-        </div><!--/.nav-collapse -->
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
     </div>
 </nav>
 
-<section id="body">
-    <div class="container">
-
-        <div class="starter-template">
-            <h1>Bootstrap starter template</h1>
-            <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Analytics</a></li>
+                <li><a href="#">Export</a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li><a href="">Nav item</a></li>
+                <li><a href="">Nav item again</a></li>
+                <li><a href="">One more nav</a></li>
+                <li><a href="">Another nav item</a></li>
+                <li><a href="">More navigation</a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li><a href="">Nav item again</a></li>
+                <li><a href="">One more nav</a></li>
+                <li><a href="">Another nav item</a></li>
+            </ul>
         </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">Dashboard</h1>
 
-    </div><!-- /.container -->
-</section>
+            <div class="row" id="firstchart"></div>
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <h2>Segundo gráfico</h2>
+                    <div id="secondchart"></div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <h2>Terceiro gráfico</h2>
+                    <div id="thirdchart"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <h2>Top Vendas</h2>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Vendido (x)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Produto 1</td>
+                                    <td>250</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 2</td>
+                                    <td>220</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 4</td>
+                                    <td>214</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 4</td>
+                                    <td>145</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 5</td>
+                                    <td>24</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <h2>Top Compras</h2>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Comprado (x)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Produto 3</td>
+                                    <td>21</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 2</td>
+                                    <td>10</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 4</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 1</td>
+                                    <td>7</td>
+                                </tr>
+                                <tr>
+                                    <td>Produto 5</td>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <h2>Top Clientes</h2>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>José</td>
+                                    <td>250000</td>
+                                </tr>
+                                <tr>
+                                    <td>Alberto</td>
+                                    <td>222000</td>
+                                </tr>
+                                <tr>
+                                    <td>Manuel</td>
+                                    <td>214000</td>
+                                </tr>
+                                <tr>
+                                    <td>Luís</td>
+                                    <td>145000</td>
+                                </tr>
+                                <tr>
+                                    <td>Carlos</td>
+                                    <td>24000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </div>
+</div>
 
 
 <script>
-    var valorcompra = Math.abs(parseInt(document.getElementById("valor-compra").getAttribute("data-valor-compra")));
-    var valorvenda = Math.abs(parseInt(document.getElementById("valor-venda").getAttribute("data-valor-venda")));
-    console.log(valorcompra);
-    new Morris.Donut({
-        // ID of the element in which to draw the chart.
-        element: 'myfirstchart',
-        // Chart data records -- each entry in this array corresponds to a point on
-        // the chart.
+    Morris.Line({
+        element: 'firstchart',
         data: [
-            { label: "Valor de Vendas", value: valorcompra },
-            { label: "Valor de Compras", value: valorvenda }
+          { y: '2006', a: 100, b: 90 },
+          { y: '2007', a: 75, b: 65 },
+          { y: '2008', a: 50, b: 40 },
+          { y: '2009', a: 75, b: 65 },
+          { y: '2010', a: 50, b: 40 },
+          { y: '2011', a: 75, b: 65 },
+          { y: '2012', a: 100, b: 90 }
+        ],
+        xkey: 'y',
+        ykeys: ['a', 'b'],
+        labels: ['Series A', 'Series B']
+    });
+
+    Morris.Donut({
+        element: 'secondchart',
+        data: [
+          { label: "Download Sales", value: 12 },
+          { label: "In-Store Sales", value: 30 },
+          { label: "Mail-Order Sales", value: 20 }
+        ]
+    });
+
+    Morris.Donut({
+        element: 'thirdchart',
+        data: [
+          { label: "Download Sales", value: 120 },
+          { label: "In-Store Sales", value: 30 },
+          { label: "Mail-Order Sales", value: 20 }
         ]
     });
 </script>
