@@ -78,17 +78,9 @@ namespace CompanyDashboard.Controllers
         // GET api/DocVenda/month/x
         public IEnumerable<Lib_Primavera.Model.DocVenda> Get(string id, string param,string param2)
         {
-            if (id == "month")
+            if (id == "month" || id == "week" || id == "year")
             {
-                return Lib_Primavera.PriIntegration.Vendas_List_month(id, param,param2);
-            }
-            else if (id == "week")
-            {
-                return Lib_Primavera.PriIntegration.Vendas_List_week(id, param, param2);
-            }
-            else if (id == "year")
-            {
-                return Lib_Primavera.PriIntegration.Vendas_List_year(id, param, param2);
+                return Lib_Primavera.PriIntegration.Vendas_List_period(id, param,param2);
             }
             else
             {
