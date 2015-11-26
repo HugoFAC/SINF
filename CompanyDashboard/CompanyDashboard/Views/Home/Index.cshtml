@@ -50,7 +50,7 @@
                         </div>
 </div>
                 <div class="col-lg-2 col-sm-6 col-xs-12">
-                    <div class="panel panel-danger panel-colorful">
+                    <div class="panel panel-danger panel-colorful" id="purchases-panel">
                         <div class="panel-body text-center">
                             <p class="text-uppercase mar-btm text-sm">Compras</p>
                             <i class="fa fa-truck fa-5x"></i>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-sm-6 col-xs-12 col-lg-offset-2">
-                    <div class="panel panel-green panel-colorful">
+                    <div class="panel panel-green panel-colorful" id="areceivable-panel">
                         <div class="panel-body text-center">
                             <p class="text-uppercase mar-btm text-sm">Contas a receber</p>
                             <i class="fa fa-plus fa-5x"></i>
@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-sm-6 col-xs-12">
-                    <div class="panel panel-danger panel-colorful">
+                    <div class="panel panel-danger panel-colorful" id="apayable-panel">
                         <div class="panel-body text-center">
                             <p class="text-uppercase mar-btm text-sm">Contas a pagar</p>
                             <i class="fa fa-minus fa-5x"></i>
@@ -212,11 +212,11 @@
     });
 
     $("#areceivable-panel").click(function () {
-        window.location.href = "Sales/Sales";
+        window.location.href = "Accounts/Receivable";
     });
 
     $("#apayable-panel").click(function () {
-        window.location.href = "Sales/Sales";
+        window.location.href = "Accounts/Payable";
     });
 
     $(".panel").css('cursor', 'pointer');
