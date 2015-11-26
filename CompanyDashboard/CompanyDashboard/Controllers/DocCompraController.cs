@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using CompanyDashboard.Lib_Primavera.Model;
+using System.Globalization;
 
 namespace CompanyDashboard.Controllers
 {
@@ -20,7 +21,7 @@ namespace CompanyDashboard.Controllers
         }
 
         
-        // GET api/cliente/5    
+        // GET api/doccompra/5    
         public object Get(string id)
         {
             if (id == "total")
@@ -69,6 +70,40 @@ namespace CompanyDashboard.Controllers
             throw new HttpResponseException(
                         Request.CreateResponse(HttpStatusCode.NotFound));
         }
+
+        public IEnumerable<Lib_Primavera.Model.DocCompra> Get(string id, string param, string param2)
+        {
+            int n;
+            bool isNumeric = int.TryParse(param, out n);
+            bool isNumeric2 = int.TryParse(param2, out n);
+
+            if (id == "data")
+            {
+                string[] formats = {"d-M-yyyy", "dd-MM-yyyy", "d-MM-yyyy", "dd-M-yyyy"};
+                DateTime dateValue;
+                DateTime dateValue2;
+
+                if (DateTime.TryParseExact(param, formats, new CultureInfo("en-US"), DateTimeStyles.None, out dateValue) 
+                    && DateTime.TryParseExact(param2, formats, new CultureInfo("en-US"), DateTimeStyles.None, out dateValue2))
+                {
+                    return Lib_Primavera.PriIntegration.Compras_List(id, dateValue, dateValue2);
+                }
+                else
+                {
+                    throw new HttpResponseException(
+                       Request.CreateResponse(HttpStatusCode.BadRequest));
+                }
+
+            }
+            else
+            {
+                throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+            throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.NotFound));
+        }
+
 
         /*public HttpResponseMessage Post(Lib_Primavera.Model.DocCompra dc)
         {

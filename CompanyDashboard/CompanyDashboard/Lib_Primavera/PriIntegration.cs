@@ -760,6 +760,60 @@ namespace CompanyDashboard.Lib_Primavera
             return listdc;
         }
 
+        public static List<Model.DocCompra> Compras_List(string id, DateTime init, DateTime end)
+        {
+
+            StdBELista objListCab;
+            StdBELista objListLin;
+            Model.DocCompra dc = new Model.DocCompra();
+            List<Model.DocCompra> listdc = new List<Model.DocCompra>();
+            Model.LinhaDocCompra lindc = new Model.LinhaDocCompra();
+            List<Model.LinhaDocCompra> listlindc = new List<Model.LinhaDocCompra>();
+
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+            {
+                string newDateInit = init.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                string newDateEnd = end.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                objListCab = PriEngine.Engine.Consulta("SELECT id, NumDocExterno, Entidade, DataDoc, NumDoc, Tipodoc, TotalMerc, Serie From CabecCompras WHERE DataDoc >= '" + newDateInit + "' AND DataDoc <='" + newDateEnd +"'");
+                while (!objListCab.NoFim())
+                {
+                    dc = new Model.DocCompra();
+                    dc.id = objListCab.Valor("id");
+                    dc.Entidade = objListCab.Valor("Entidade");
+                    dc.NumDocExterno = objListCab.Valor("NumDocExterno");
+                    dc.NumDoc = objListCab.Valor("NumDoc");
+                    dc.Data = objListCab.Valor("DataDoc");
+                    dc.TotalMerc = objListCab.Valor("TotalMerc");
+                    dc.Tipodoc = objListCab.Valor("Tipodoc");
+                    dc.Serie = objListCab.Valor("Serie");
+                    objListLin = PriEngine.Engine.Consulta("SELECT idCabecDoc, Artigo, Descricao, Quantidade, Unidade, PrecUnit, Desconto1, TotalILiquido, PrecoLiquido from LinhasDoc where IdCabecDoc='" + dc.id + "' order By NumLinha");
+                    listlindc = new List<Model.LinhaDocCompra>();
+
+                    while (!objListLin.NoFim())
+                    {
+                        lindc = new Model.LinhaDocCompra();
+                        lindc.IdCabecDoc = objListLin.Valor("idCabecDoc");
+                        lindc.CodArtigo = objListLin.Valor("Artigo");
+                        lindc.DescArtigo = objListLin.Valor("Descricao");
+                        lindc.Quantidade = objListLin.Valor("Quantidade");
+                        lindc.Unidade = objListLin.Valor("Unidade");
+                        lindc.Desconto = objListLin.Valor("Desconto1");
+                        lindc.PrecoUnitario = objListLin.Valor("PrecUnit");
+                        lindc.TotalILiquido = objListLin.Valor("TotalILiquido");
+                        lindc.TotalLiquido = objListLin.Valor("PrecoLiquido");
+
+                        listlindc.Add(lindc);
+                        objListLin.Seguinte();
+                    }
+
+                    dc.LinhasDoc = listlindc;
+                    listdc.Add(dc);
+                    objListCab.Seguinte();
+                }
+            }
+            return listdc;
+        }
+
 
         #endregion DocCompra
 
@@ -1119,5 +1173,6 @@ namespace CompanyDashboard.Lib_Primavera
         }
 
         #endregion DocsVenda
+
     }
 }
