@@ -53,11 +53,12 @@ namespace CompanyDashboard.Controllers
 
         }
 
+        // GET api/Doccompra/months/x
         public IEnumerable<Lib_Primavera.Model.DocCompra> Get(string id, string param)
         {
             int n;
             bool isNumeric = int.TryParse(param, out n);
-            if (isNumeric && id == "month")
+            if (isNumeric && id == "months")
             {
                 return Lib_Primavera.PriIntegration.Compras_List(id, n);
             }
@@ -69,6 +70,33 @@ namespace CompanyDashboard.Controllers
             throw new HttpResponseException(
                         Request.CreateResponse(HttpStatusCode.NotFound));
         }
+
+        // GET api/Doccompra/week/x
+        // GET api/Doccompra/year/x
+        // GET api/Doccompra/month/x
+        public IEnumerable<Lib_Primavera.Model.DocCompra> Get(string id, string param, string param2)
+        {
+            if (id == "month")
+            {
+                return Lib_Primavera.PriIntegration.Compras_List_month(id, param, param2);
+            }
+            else if (id == "week")
+            {
+                return Lib_Primavera.PriIntegration.Compras_List_week(id, param, param2);
+            }
+            else if (id == "year")
+            {
+                return Lib_Primavera.PriIntegration.Compras_List_year(id, param, param2);
+            }
+            else
+            {
+                throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+            throw new HttpResponseException(
+                        Request.CreateResponse(HttpStatusCode.NotFound));
+        }
+
 
         /*public HttpResponseMessage Post(Lib_Primavera.Model.DocCompra dc)
         {
