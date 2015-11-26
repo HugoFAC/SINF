@@ -657,6 +657,24 @@ namespace CompanyDashboard.Lib_Primavera
             return totalC;
         }
 
+        public static float Compras_Total_per(String start, String finish)
+        {
+
+            StdBELista objListCab;
+            Model.DocCompra dv = new Model.DocCompra();
+            float totalC = 0;
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+            {
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecCompras WHERE Tipodoc != 'COT' AND Tipodoc != 'PCO' AND DataDoc between '" + start + "' and'" + finish + "'");
+                while (!objListCab.NoFim())
+                {
+                    totalC += objListCab.Valor("total");
+                    objListCab.Seguinte();
+                }
+            }
+            return totalC;
+        }
+
         public static Model.DocCompra Compra_Get(string numdoc)
         {
             StdBELista objListCab;
@@ -950,7 +968,23 @@ namespace CompanyDashboard.Lib_Primavera
             }
             return totalV;
         }
+        public static float Vendas_Total_per(string start, string finish)
+        {
 
+            StdBELista objListCab;
+            Model.DocVenda dv = new Model.DocVenda();
+            float totalV = 0;
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+            {
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecDoc WHERE Tipodoc = 'FA' AND Data between '" + start + "' and'" + finish + "'");
+                while (!objListCab.NoFim())
+                {
+                    totalV += objListCab.Valor("total");
+                    objListCab.Seguinte();
+                }
+            }
+            return totalV;
+        }
         public static List<Model.DocVenda> Vendas_List(string id, int month)
         {
 

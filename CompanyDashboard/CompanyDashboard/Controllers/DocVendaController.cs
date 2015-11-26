@@ -25,7 +25,7 @@ namespace CompanyDashboard.Controllers
         // GET api/DocVenda/5    
         public object Get(string id)
         {
-            if (id == "total")
+            if (id == "totalabs")
             {
                 return Lib_Primavera.PriIntegration.Vendas_Total();
             }
@@ -76,11 +76,15 @@ namespace CompanyDashboard.Controllers
         // GET api/DocVenda/week/x
         // GET api/DocVenda/year/x
         // GET api/DocVenda/month/x
-        public IEnumerable<Lib_Primavera.Model.DocVenda> Get(string id, string param,string param2)
+        public Object Get(string id, string param,string param2)
         {
             if (id == "month" || id == "week" || id == "year")
             {
                 return Lib_Primavera.PriIntegration.Vendas_List_period(id, param,param2);
+            }
+            else if (id == "totalper")
+            {
+                return Lib_Primavera.PriIntegration.Vendas_Total_per(param, param2);
             }
             else
             {
