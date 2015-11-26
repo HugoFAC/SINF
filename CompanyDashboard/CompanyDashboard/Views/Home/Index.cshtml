@@ -34,6 +34,14 @@
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
                     <h2>Crescimento</h2>
+                    <div class="col-lg-2 col-xs-12 col-lg-offset-10 col-xs-offset-0">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" id="week-btn">Week</button>
+                            <button type="button" class="btn btn-default" id="month-btn">Month</button>
+                            <button type="button" class="btn btn-default" id="year-btn">Year</button>
+                        </div>
+                    </div>
+                    <br>
                     <div id="firstchart"></div>
                 </div>
             </div>
@@ -221,7 +229,7 @@
 
     $(".panel").css('cursor', 'pointer');
 
-    Morris.Line({
+    var firstchart = Morris.Line({
         element: 'firstchart',
         data: [
           { y: '2006', a: 100, b: 90 },
@@ -238,7 +246,28 @@
         labels: ['Series A', 'Series B']
     });
 
-    Morris.Donut({
+    jQuery(function ($) {
+        $('#week-btn').on('click', function () {
+            //change data values using
+            //firstchart.options.data = newData;
+            firstchart.options.grid = false; //só para teste
+            firstchart.redraw();
+        });
+        $('#month-btn').on('click', function () {
+            //change data values using
+            //firstchart.options.data = newData;
+            firstchart.options.grid = true; //só para teste
+            firstchart.redraw();
+        });
+        $('#year-btn').on('click', function () {
+            //change data values using
+            //firstchart.options.data = newData;
+            firstchart.options.grid = true; //só para teste
+            firstchart.redraw();
+        });
+    });
+
+    var secondchart = Morris.Donut({
         element: 'secondchart',
         resize: true,
         data: [
@@ -248,7 +277,7 @@
         ]
     });
 
-    Morris.Donut({
+    var thirdchart = Morris.Donut({
         element: 'thirdchart',
         resize: true,
         data: [
