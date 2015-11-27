@@ -37,6 +37,21 @@ namespace CompanyDashboard.Controllers
             }
         }
 
+        public Object Get(string id, string param)
+        {
+            int n;
+            bool isNumeric = int.TryParse(param, out n);
+            if (id == "top" && isNumeric)
+            {
+                IEnumerable<Lib_Primavera.Model.Cliente> clientes = Lib_Primavera.PriIntegration.GetTopClientes(n);
+                return clientes;
+            }
+            else
+            {
+                throw new HttpResponseException(
+                  Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+        }
 
         public HttpResponseMessage Post(Lib_Primavera.Model.Cliente cliente)
         {

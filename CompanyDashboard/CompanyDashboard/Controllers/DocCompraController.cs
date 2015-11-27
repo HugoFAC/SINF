@@ -53,13 +53,21 @@ namespace CompanyDashboard.Controllers
 
         }
         // GET api/Doccompra/months/x
-        public IEnumerable<Lib_Primavera.Model.DocCompra> Get(string id, string param)
+        public Object Get(string id, string param)
         {
             int n;
             bool isNumeric = int.TryParse(param, out n);
             if (isNumeric && id == "months")
             {
-                return Lib_Primavera.PriIntegration.Compras_List(id, n);
+                return Lib_Primavera.PriIntegration.Compras_List_Months(id, n);
+            }
+            else if (isNumeric && id == "years")
+            {
+                return Lib_Primavera.PriIntegration.Compras_List_Years2(id, n);
+            }
+            else if (isNumeric && id == "year")
+            {
+                return Lib_Primavera.PriIntegration.Compras_List_Year(id, n);
             }
             else
             {
@@ -70,9 +78,9 @@ namespace CompanyDashboard.Controllers
                         Request.CreateResponse(HttpStatusCode.NotFound));
         }
 
-        // GET api/Doccompra/week/x
-        // GET api/Doccompra/year/x
-        // GET api/Doccompra/month/x
+        // GET api/Doccompra/week/DD-MM-YYYY/DD-MM-YYYY
+        // GET api/Doccompra/year/DD-MM-YYYY/DD-MM-YYYY
+        // GET api/Doccompra/month/DD-MM-YYYY/DD-MM-YYYY
         public Object Get(string id, string param, string param2)
         {
             if (id == "month" || id == "week" || id == "year")

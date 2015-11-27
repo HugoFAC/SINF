@@ -2,10 +2,16 @@
     var client = new WebClient();
     var json = client.DownloadString("http://localhost:49413/api/artigos/top/5");
     var top_artigos = Json.Decode(json);
-    var json2 = client.DownloadString("http://localhost:49413/api/docvenda/totalabs");
-    var total_vendas = Json.Decode(json2);
-    var json3 = client.DownloadString("http://localhost:49413/api/doccompra/totalabs");
-    var total_compras = Json.Decode(json3);
+    json = client.DownloadString("http://localhost:49413/api/docvenda/totalabs");
+    var total_vendas = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/doccompra/totalabs");
+    var total_compras = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/clientes/top/5");
+    var top_clientes = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/doccompra/years/3");
+    var compras_last3years = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/docvenda/years/3");
+    var vendas_last3years = Json.Decode(json);
 }
 
 <div class="container-fluid">
@@ -39,7 +45,34 @@
                         <div class="btn-group float-right">
                             <button type="button" class="btn btn-default" id="week-btn">Week</button>
                             <button type="button" class="btn btn-default" id="month-btn">Month</button>
+                            <div class="form-group float-right" id="month-selection" hidden>
+                                <select class="form-control" id="selMonth">
+                                    <option value="3">Últimos 3 meses</option>
+                                    <option value="6">Últimos 6 meses</option>
+                                    <option value="01-01/">Janeiro</option>
+                                    <option value="01-02">Fevereiro</option>
+                                    <option value="01-03">Março</option>
+                                    <option value="01-04">Abril</option>
+                                    <option value="01-05">Maio</option>
+                                    <option value="01-06">Junho</option>
+                                    <option value="01-07">Julho</option>
+                                    <option value="01-08">Agosto</option>
+                                    <option value="01-09">Setembro</option>
+                                    <option value="01-10">Outubro</option>
+                                    <option value="01-11">Novembro</option>
+                                    <option value="01-12">Dezembro</option>
+                                </select>
+                            </div>
                             <button type="button" class="btn btn-default" id="year-btn">Year</button>
+                            <div class="form-group float-right" id="year-selection" hidden>
+                                <select class="form-control" id="selYear">
+                                    <option value="3" selected>Últimos 3 anos</option>
+                                    <option value="2012">2012</option>
+                                    <option value="2013">2013</option>
+                                    <option value="2014">2014</option>
+                                    <option value="2015">2015</option>
+                                </select>
+                            </div>
                         </div>
                     <br />
                     <br />
@@ -127,67 +160,169 @@
     $(".panel").css('cursor', 'pointer');
 
     var top_artigos =  @Html.Raw(Json.Encode(@top_artigos));
-    var data = [];
+    var data_top_artigos = [];
     for(var i = 0; i < top_artigos.length; i++){
         var datatemp = {label: 'teste', value: '2' };
 
         datatemp.label = top_artigos[i].DescArtigo;
-        datatemp.value = top_artigos[i].TotalVendas;
-        data.push(datatemp);
+        datatemp.value = parseFloat(Math.round(top_artigos[i].TotalVendas * 100) / 100).toFixed(2);
+        data_top_artigos.push(datatemp);
     }
-        
+
+    var top_clientes =  @Html.Raw(Json.Encode(@top_clientes));
+    var data_top_clientes = [];
+    for(var i = 0; i < top_clientes.length; i++){
+        var datatemp = {label: 'teste', value: '2' };
+
+        datatemp.label = top_clientes[i].NomeCliente;
+        datatemp.value = parseFloat(Math.round(top_clientes[i].TotalGasto * 100) / 100).toFixed(2);
+        data_top_clientes.push(datatemp);
+    }
+
+    var compras_last3years =  @Html.Raw(Json.Encode(@compras_last3years));
+    var data_crescimento = [];
+    for(var i = 0; i < compras_last3years.length; i++){
+        var datatemp = {y: 'teste', b: '2' };
+
+        datatemp.y = compras_last3years[i].Num;
+        datatemp.b = parseFloat(Math.round(compras_last3years[i].Total * 100) / 100).toFixed(2);
+        data_crescimento.push(datatemp);
+    }
+
+    var vendas_last3years =  @Html.Raw(Json.Encode(@vendas_last3years));
+    for(var i = 0; i < vendas_last3years.length; i++){
+        var datatemp = {y: 'teste', a: '2' };
+
+        datatemp.y = vendas_last3years[i].Num;
+        datatemp.a = parseFloat(Math.round(vendas_last3years[i].Total * 100) / 100).toFixed(2);
+        data_crescimento.push(datatemp);
+    }
 
     var firstchart = Morris.Line({
         element: 'firstchart',
-        data: [
-          { y: '2006', a: 100, b: 90 },
-          { y: '2007', a: 75, b: 65 },
-          { y: '2008', a: 50, b: 40 },
-          { y: '2009', a: 75, b: 65 },
-          { y: '2010', a: 50, b: 40 },
-          { y: '2011', a: 75, b: 65 },
-          { y: '2012', a: 100, b: 90 }
-        ],
+        data: data_crescimento,
         xkey: 'y',
         ykeys: ['a', 'b'],
+        lineColors: ['green', 'red'],
         resize: true,
-        labels: ['Series A', 'Series B']
+        labels: ['Vendas', 'Compras'],
+        xlabels: 'month'
     });
 
     jQuery(function ($) {
         $('#week-btn').on('click', function () {
             //change data values using
             //firstchart.options.data = newData;
+            $('#month-selection').hide();
+            $('#year-selection').hide();
             firstchart.options.grid = false; //só para teste
             firstchart.redraw();
         });
         $('#month-btn').on('click', function () {
             //change data values using
             //firstchart.options.data = newData;
+            $('#year-selection').hide();
+            $('#month-selection').show();
             firstchart.options.grid = true; //só para teste
             firstchart.redraw();
         });
         $('#year-btn').on('click', function () {
             //change data values using
             //firstchart.options.data = newData;
+            $('#month-selection').hide();
+            $('#year-selection').show();
             firstchart.options.grid = true; //só para teste
             firstchart.redraw();
+        });
+        $('#year-selection').on('change', function() {
+            var teste = $('#selYear').val();
+            console.log(teste);
+            var data_crescimento = [];
+            if(teste == null){
+                return;
+            }
+            else if(teste == 3){
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/doccompra/years/' + teste,
+                    success: function(response) {
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {y: 'teste', b: '2' };
+
+                            datatemp.y = response[i].Num;
+                            datatemp.b = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
+                            data_crescimento.push(datatemp);
+                        }
+                    }
+                });
+
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/docvenda/years/' + teste,
+                    success: function(response) {
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {y: 'teste', a: '2' };
+
+                            datatemp.y = response[i].Num;
+                            datatemp.a = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
+                            data_crescimento.push(datatemp);
+                        }
+                    }
+                });
+
+                firstchart.setData(data_crescimento);
+
+            }
+            else{
+                
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/doccompra/year/' + teste,
+                    success: function(response) {
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {y: 'teste', b: '2' };
+
+                            datatemp.y = response[i].Num;
+                            datatemp.b = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
+                            data_crescimento.push(datatemp);
+                        }
+                    }
+                });
+
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/docvenda/year/' + teste,
+                    success: function(response) {
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {y: 'teste', a: '2' };
+
+                            datatemp.y = response[i].Num;
+                            datatemp.a = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
+                            data_crescimento.push(datatemp);
+                        }
+                    }
+                });
+                firstchart.setData(data_crescimento);
+                $('#year-selection').hide();
+            }
+
+
         });
     });
 
     var secondchart = Morris.Donut({
         element: 'secondchart',
         resize: true,
-        data: [
-          { label: "Download Sales", value: 12 },
-          { label: "In-Store Sales", value: 30 },
-          { label: "Mail-Order Sales", value: 20 }
-        ]
+        data: data_top_clientes
     });
 
     var thirdchart = Morris.Donut({
         element: 'thirdchart',
         resize: true,
-        data: data
+        data: data_top_artigos
     });
 </script>

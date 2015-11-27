@@ -34,6 +34,11 @@ namespace CompanyDashboard.Lib_Primavera.Model
             get;
             set;
         }
+        public double TotalGasto
+        {
+            get;
+            set;
+        }
 
         public string NumContribuinte
         {

@@ -57,13 +57,21 @@ namespace CompanyDashboard.Controllers
 
 
         // GET api/DocVenda/months/6   
-        public IEnumerable<Lib_Primavera.Model.DocVenda> Get(string id, string param)
+        public Object Get(string id, string param)
         {
             int n;
             bool isNumeric = int.TryParse(param, out n);
             if (isNumeric && id == "months")
             {
                 return Lib_Primavera.PriIntegration.Vendas_List(id, n);
+            }
+            else if (isNumeric && id == "years")
+            {
+                return Lib_Primavera.PriIntegration.Vendas_List_Years2(id, n);
+            }
+            else if (isNumeric && id == "year")
+            {
+                return Lib_Primavera.PriIntegration.Vendas_List_Year(id, n);
             }
             else
             {
