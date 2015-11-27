@@ -18,5 +18,11 @@ namespace CompanyDashboard.Lib_Primavera.Model
             get;
             set;
         }
+
+        public double TotalVendas
+        {
+            get;
+            set;
+        }
     }
 }

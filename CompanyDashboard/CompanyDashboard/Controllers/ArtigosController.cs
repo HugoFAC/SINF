@@ -23,8 +23,9 @@ namespace CompanyDashboard.Controllers
 
 
         // GET api/artigo/5    
-        public Artigo Get(string id)
+        public Lib_Primavera.Model.Artigo Get(string id)
         {
+
             Lib_Primavera.Model.Artigo artigo = Lib_Primavera.PriIntegration.GetArtigo(id);
             if (artigo == null)
             {
@@ -34,6 +35,22 @@ namespace CompanyDashboard.Controllers
             else
             {
                 return artigo;
+            }
+        }
+
+        public Object Get(string id, string param)
+        {
+            int n;
+            bool isNumeric = int.TryParse(param, out n);
+            if (id == "top" && isNumeric)
+            {
+                IEnumerable<Lib_Primavera.Model.Artigo> artigos = Lib_Primavera.PriIntegration.GetTopArtigos(n);
+                return artigos;
+            }
+            else
+            {
+                throw new HttpResponseException(
+                  Request.CreateResponse(HttpStatusCode.BadRequest));
             }
         }
 

@@ -351,6 +351,40 @@ namespace CompanyDashboard.Lib_Primavera
 
         }
 
+        public static List<Model.Artigo> GetTopArtigos(int numArtigos)
+        {
+
+            StdBELista objList;
+
+            Model.Artigo art = new Model.Artigo();
+            List<Model.Artigo> listArts = new List<Model.Artigo>();
+
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+            {
+
+                //objList = PriEngine.Engine.Consulta("SELECT TOP " + numArtigos + " descricao, total FROM Artigo JOIN (SELECT Artigo.Artigo, SUM(PrecoLiquido) AS total FROM linhasDoc JOIN artigo ON linhasDoc.Artigo = Artigo.Artigo JOIN cabecDoc ON linhasDoc.IdCabecDoc = cabecDoc.Id WHERE cabecDoc.tipoDoc != 'ECL' AND cabecDoc.tipoDoc != 'GR' AND linhasDoc.Artigo != 'NULL' GROUP BY Artigo.Artigo) t1 ON Artigo.Artigo = t1.Artigo ORDER BY total DESC");
+                objList = PriEngine.Engine.Consulta("select top " + numArtigos + " a.Artigo ,a.descricao, SUM(PrecoLiquido) as total from linhasDoc as l, artigo as a, cabecDoc as c WHERE l.Artigo = a.Artigo AND l.IdCabecDoc = c.Id AND c.tipoDoc != 'ECL' and c.tipoDoc != 'GR' and l.Artigo != 'NULL' group by a.artigo,a.descricao order by total DESC");
+                while (!objList.NoFim())
+                {
+                    art = new Model.Artigo();
+                    art.CodArtigo = objList.Valor("Artigo");
+                    art.TotalVendas = objList.Valor("total");
+                    art.DescArtigo = objList.Valor("descricao");
+
+                    listArts.Add(art);
+                    objList.Seguinte();
+                }
+
+                return listArts;
+
+            }
+            else
+            {
+                return null;
+
+            }
+        }
+
         public static List<Model.Artigo> ListaArtigos()
         {
                         

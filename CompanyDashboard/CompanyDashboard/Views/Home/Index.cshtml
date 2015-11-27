@@ -1,9 +1,11 @@
 ﻿@{
     var client = new WebClient();
-    var json = client.DownloadString("http://localhost:49413/api/doccompra/totalabs");
-    var search = Json.Decode(json);
+    var json = client.DownloadString("http://localhost:49413/api/artigos/top/5");
+    var top_artigos = Json.Decode(json);
     var json2 = client.DownloadString("http://localhost:49413/api/docvenda/totalabs");
-    var search2 = Json.Decode(json2);
+    var total_vendas = Json.Decode(json2);
+    var json3 = client.DownloadString("http://localhost:49413/api/doccompra/totalabs");
+    var total_compras = Json.Decode(json3);
 }
 
 <div class="container-fluid">
@@ -55,7 +57,7 @@
                                 <p class="text-uppercase mar-btm text-sm">Vendas</p>
                                 <i class="fa fa-shopping-cart fa-5x"></i>
                                 <hr>
-                                <p class="h2 text-thin">254,487</p>
+                                <p class="h2 text-thin">@total_vendas <strong>€</strong></p>
                             </div>
                         </div>
 </div>
@@ -65,7 +67,7 @@
                             <p class="text-uppercase mar-btm text-sm">Compras</p>
                             <i class="fa fa-truck fa-5x"></i>
                             <hr>
-                            <p class="h2 text-thin">873</p>
+                            <p class="h2 text-thin">@total_compras <strong>€</strong></p>
                         </div>
                     </div>
                 </div>
@@ -91,121 +93,14 @@
                 </div>
             </div><div class="row">
                 <div class="col-lg-6 col-sm-6">
-                    <h2>Segundo gráfico</h2>
+                    <h2 class="text-center">Top Clientes</h2>
                     <div id="secondchart"></div>
                 </div>
-                <div class="col-lg-6 col-sm-6">
-                    <h2>Terceiro gráfico</h2>
+                <div class="col-lg-6 col-sm-6" data-chart-values="@top_artigos" id="top-artigos">
+                    <h2 class="text-center">Top Produtos</h2>
                     <div id="thirdchart"></div>
                 </div>
             </div>
-            @*<div class="row">
-                <div class="col-lg-4 col-sm-4">
-                    <h2>Top Vendas</h2>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Vendido (x)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Produto 1</td>
-                                    <td>250</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 2</td>
-                                    <td>220</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 4</td>
-                                    <td>214</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 4</td>
-                                    <td>145</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 5</td>
-                                    <td>24</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-4">
-                    <h2>Top Compras</h2>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Comprado (x)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Produto 3</td>
-                                    <td>21</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 2</td>
-                                    <td>10</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 4</td>
-                                    <td>8</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 1</td>
-                                    <td>7</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 5</td>
-                                    <td>2</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-4">
-                    <h2>Top Clientes</h2>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>José</td>
-                                    <td>250000</td>
-                                </tr>
-                                <tr>
-                                    <td>Alberto</td>
-                                    <td>222000</td>
-                                </tr>
-                                <tr>
-                                    <td>Manuel</td>
-                                    <td>214000</td>
-                                </tr>
-                                <tr>
-                                    <td>Luís</td>
-                                    <td>145000</td>
-                                </tr>
-                                <tr>
-                                    <td>Carlos</td>
-                                    <td>24000</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>*@
             </div>
     </div>
 </div>
@@ -230,6 +125,17 @@
     });
 
     $(".panel").css('cursor', 'pointer');
+
+    var top_artigos =  @Html.Raw(Json.Encode(@top_artigos));
+    var data = [];
+    for(var i = 0; i < top_artigos.length; i++){
+        var datatemp = {label: 'teste', value: '2' };
+
+        datatemp.label = top_artigos[i].DescArtigo;
+        datatemp.value = top_artigos[i].TotalVendas;
+        data.push(datatemp);
+    }
+        
 
     var firstchart = Morris.Line({
         element: 'firstchart',
@@ -282,10 +188,6 @@
     var thirdchart = Morris.Donut({
         element: 'thirdchart',
         resize: true,
-        data: [
-          { label: "Download Sales", value: 120 },
-          { label: "In-Store Sales", value: 30 },
-          { label: "Mail-Order Sales", value: 20 }
-        ]
+        data: data
     });
 </script>
