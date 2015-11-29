@@ -15,8 +15,8 @@ namespace CompanyDashboard
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}/{param}/{param2}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional, param = UrlParameter.Optional, param2 = UrlParameter.Optional }
+                url: "{controller}/{action}/{id}/{param}/{param2}/{param3}/{param4}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional, param = UrlParameter.Optional, param2 = UrlParameter.Optional, param3 = UrlParameter.Optional, param4 = UrlParameter.Optional }
             );
 
         }

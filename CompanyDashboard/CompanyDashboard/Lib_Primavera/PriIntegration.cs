@@ -792,7 +792,7 @@ namespace CompanyDashboard.Lib_Primavera
             return null;
         }
 
-        public static List<Model.DocCompra> Compras_List_Months(string id, int month)
+        public static List<Model.DocCompra> Compras_List_Months(int month)
         {
 
             StdBELista objListCab;
@@ -848,7 +848,7 @@ namespace CompanyDashboard.Lib_Primavera
         }
 
 
-        public static List<Model.DocCompra> Compras_List_Years(string id, int years)
+        public static List<Model.DocCompra> Compras_List_Years(int years)
         {
 
             StdBELista objListCab;
@@ -903,7 +903,7 @@ namespace CompanyDashboard.Lib_Primavera
             return listdc;
         }
 
-        public static Object Compras_List_Years2(string id, int years)
+        public static Object Compras_List_Years2(int years)
         {
 
             StdBELista objListCab;
@@ -930,7 +930,7 @@ namespace CompanyDashboard.Lib_Primavera
             return listdc;
         }
 
-        public static Object Compras_List_Year(string id, int year)
+        public static Object Compras_List_Year(int year)
         {
 
             StdBELista objListCab;
@@ -952,7 +952,7 @@ namespace CompanyDashboard.Lib_Primavera
             return listdc;
         }
 
-        public static List<Model.DocCompra> Compras_List_period(string id, string start, string finish)
+        public static List<Model.DocCompra> Compras_List_period(string start, string finish)
         {
 
             StdBELista objListCab;
@@ -1160,7 +1160,7 @@ namespace CompanyDashboard.Lib_Primavera
             }
             return totalV;
         }
-        public static List<Model.DocVenda> Vendas_List(string id, int month)
+        public static List<Model.DocVenda> Vendas_List(int month)
         {
 
             StdBELista objListCab;
@@ -1215,7 +1215,7 @@ namespace CompanyDashboard.Lib_Primavera
             return listdv;
         }
 
-        public static List<Model.DocVenda> Vendas_List_Years(string id, int years)
+        public static List<Model.DocVenda> Vendas_List_Years(int years)
         {
 
             StdBELista objListCab;
@@ -1270,7 +1270,7 @@ namespace CompanyDashboard.Lib_Primavera
             return listdv;
         }
 
-        public static Object Vendas_List_Years2(string id, int years)
+        public static Object Vendas_List_Years2(int years)
         {
 
             StdBELista objListCab;
@@ -1297,7 +1297,7 @@ namespace CompanyDashboard.Lib_Primavera
             return listdc;
         }
 
-        public static Object Vendas_List_Year(string id, int year)
+        public static Object Vendas_List_Year(int year)
         {
 
             StdBELista objListCab;
@@ -1320,7 +1320,7 @@ namespace CompanyDashboard.Lib_Primavera
         }
 
 
-        public static List<Model.DocVenda> Vendas_List_period(string id, string start, string finish)
+        public static List<Model.DocVenda> Vendas_List_period(string start, string finish)
         {
 
             StdBELista objListCab;

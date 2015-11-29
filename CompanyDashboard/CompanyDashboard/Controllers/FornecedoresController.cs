@@ -12,25 +12,20 @@ namespace CompanyDashboard.Controllers
 {
     public class FornecedoresController : ApiController
     {
-        //
-        // GET: /Fornecedores/
 
-        // GET: /Clientes/
-
+        // GET: api/fornecedores/
         public IEnumerable<Lib_Primavera.Model.Fornecedor> Get()
         {
             return Lib_Primavera.PriIntegration.ListaFornecedores();
         }
 
-
-        // GET api/Fornecedor/F0005    
-        public Fornecedor Get(string id)
+        // GET api/fornecedor/F0005    
+        public Object Get(string id)
         {
             Lib_Primavera.Model.Fornecedor fornecedor = Lib_Primavera.PriIntegration.GetFornecedor(id);
             if (fornecedor == null)
             {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
+                return Request.CreateResponse(HttpStatusCode.NotFound, "O fornecedor com o id " + id + " não existe!");
 
             }
             else
@@ -39,11 +34,11 @@ namespace CompanyDashboard.Controllers
             }
         }
 
-
-        /*public ActionResult Index()
+        //Precisamos de fazer novos webservices conforme o prof disse
+        public Object Get(string id, string param, string param2, string param3, string param4)
         {
-            return View();
+            //Adicionei mais parâmetros porque acho que vão ser precisos
+            return 0;
         }
-        */
     }
 }

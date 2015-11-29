@@ -13,16 +13,14 @@ namespace CompanyDashboard.Controllers
 {
     public class DocVendaController : ApiController
     {
-        //
-        // GET: /DocVenda/
+        // GET: api/docvenda/
 
         public IEnumerable<Lib_Primavera.Model.DocVenda> Get()
         {
             return Lib_Primavera.PriIntegration.Vendas_List();
         }
 
-
-        // GET api/DocVenda/5    
+        // GET api/docvenda/5    
         public object Get(string id)
         {
             if (id == "totalabs")
@@ -38,8 +36,7 @@ namespace CompanyDashboard.Controllers
                     Lib_Primavera.Model.DocVenda docvenda = Lib_Primavera.PriIntegration.Venda_Get(id);
                     if (docvenda == null)
                     {
-                        throw new HttpResponseException(
-                                Request.CreateResponse(HttpStatusCode.NotFound));
+                        return Request.CreateResponse(HttpStatusCode.NotFound, "O DocVenda com o id " + id + " não existe!");
 
                     }
                     else
@@ -49,46 +46,47 @@ namespace CompanyDashboard.Controllers
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest);
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/docvenda/totalabs ou api/docvenda/[idDocVenda]");
                 }
             }
-
         }
 
-
-        // GET api/DocVenda/months/6   
+        // GET api/docvenda/months/6   
         public Object Get(string id, string param)
         {
             int n;
             bool isNumeric = int.TryParse(param, out n);
             if (isNumeric && id == "months")
             {
-                return Lib_Primavera.PriIntegration.Vendas_List(id, n);
+                return Lib_Primavera.PriIntegration.Vendas_List(n);
             }
             else if (isNumeric && id == "years")
             {
-                return Lib_Primavera.PriIntegration.Vendas_List_Years2(id, n);
+                return Lib_Primavera.PriIntegration.Vendas_List_Years2(n);
             }
             else if (isNumeric && id == "year")
             {
-                return Lib_Primavera.PriIntegration.Vendas_List_Year(id, n);
+                return Lib_Primavera.PriIntegration.Vendas_List_Year(n);
             }
             else
             {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.BadRequest));
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: (1)api/docvenda/months/[numMeses] (2)api/docvenda/years/[numAnos] (3)api/docvenda/weeks/[numSemanas] (4)api/docvenda/year/[ano]");
             }
-            throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
         }
-        // GET api/DocVenda/week/x
-        // GET api/DocVenda/year/x
-        // GET api/DocVenda/month/x
-        public Object Get(string id, string param,string param2)
+        // GET api/docvenda/week/x
+        // GET api/docvenda/year/x
+        // GET api/docvenda/month/x
+        public Object Get(string id, string param, string param2)
         {
+            string pattern = "([1-9]|0[1-9]|[12][0-9]|3[01])[-]([1-9]|0[1-9]|1[012])[-][0-9]{4}$";
+
+            if(!(System.Text.RegularExpressions.Regex.IsMatch(param, pattern) && System.Text.RegularExpressions.Regex.IsMatch(param2, pattern))){
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Data inválida, deve estar no formato dd-mm-aaaa!\nExemplo: 01-01-1901");
+            }
+
             if (id == "month" || id == "week" || id == "year")
             {
-                return Lib_Primavera.PriIntegration.Vendas_List_period(id, param,param2);
+                return Lib_Primavera.PriIntegration.Vendas_List_period(param,param2);
             }
             else if (id == "totalper")
             {
@@ -96,11 +94,8 @@ namespace CompanyDashboard.Controllers
             }
             else
             {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.BadRequest));
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/docvenda/month/DD-MM-YYYY/DD-MM-YYYY");
             }
-            throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
         }
 
         public HttpResponseMessage Post(Lib_Primavera.Model.DocVenda dv)
@@ -123,62 +118,11 @@ namespace CompanyDashboard.Controllers
             }
 
         }
-
-
-        public HttpResponseMessage Put(int id, Lib_Primavera.Model.DocVenda dv)
+        //Precisamos de fazer novos webservices conforme o prof disse
+        public Object Get(string id, string param, string param2, string param3, string param4)
         {
-
-            Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-
-            try
-            {
-                erro = Lib_Primavera.PriIntegration.UpdDocVenda(dv);
-                if (erro.Erro == 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, erro.Descricao);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, erro.Descricao);
-                }
-            }
-
-            catch (Exception exc)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, erro.Descricao);
-            }
-        }
-
-
-
-        public HttpResponseMessage Delete(string id)
-        {
-
-
-            Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-
-            try
-            {
-
-                erro = Lib_Primavera.PriIntegration.DelDocVenda(id);
-
-                if (erro.Erro == 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, erro.Descricao);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, erro.Descricao);
-                }
-
-            }
-
-            catch (Exception exc)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, erro.Descricao);
-
-            }
-
+            //Adicionei mais parâmetros porque acho que vão ser precisos
+            return 0;
         }
     }
 }

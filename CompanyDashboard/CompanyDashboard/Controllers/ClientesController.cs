@@ -12,24 +12,20 @@ namespace CompanyDashboard.Controllers
 {
     public class ClientesController : ApiController
     {
-        //
-        // GET: /Clientes/
-
+        // GET: api/clientes/
         public IEnumerable<Lib_Primavera.Model.Cliente> Get()
         {
                 return Lib_Primavera.PriIntegration.ListaClientes();
         }
 
 
-        // GET api/cliente/5    
-        public Cliente Get(string id)
+        // GET api/clientes/5    
+        public Object Get(string id)
         {
             Lib_Primavera.Model.Cliente cliente = Lib_Primavera.PriIntegration.GetCliente(id);
             if (cliente == null)
             {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
-
+                return Request.CreateResponse(HttpStatusCode.NotFound, "O cliente com o id " + id + " não existe!");
             }
             else
             {
@@ -37,6 +33,7 @@ namespace CompanyDashboard.Controllers
             }
         }
 
+        // GET api/clientes/top/5
         public Object Get(string id, string param)
         {
             int n;
@@ -48,89 +45,15 @@ namespace CompanyDashboard.Controllers
             }
             else
             {
-                throw new HttpResponseException(
-                  Request.CreateResponse(HttpStatusCode.BadRequest));
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/clientes/top/5");
             }
         }
 
-        public HttpResponseMessage Post(Lib_Primavera.Model.Cliente cliente)
+        //Precisamos de fazer novos webservices conforme o prof disse
+        public Object Get(string id, string param, string param2, string param3, string param4)
         {
-            Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-            erro = Lib_Primavera.PriIntegration.InsereClienteObj(cliente);
-
-            if (erro.Erro == 0)
-            {
-                var response = Request.CreateResponse(
-                   HttpStatusCode.Created, cliente);
-                string uri = Url.Link("DefaultApi", new { CodCliente = cliente.CodCliente });
-                response.Headers.Location = new Uri(uri);
-                return response;
-            }
-
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-
+            //Adicionei mais parâmetros porque acho que vão ser precisos
+            return 0;
         }
-
-
-        public HttpResponseMessage Put(string id, Lib_Primavera.Model.Cliente cliente)
-        {
-
-            Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-
-            try
-            {
-                erro = Lib_Primavera.PriIntegration.UpdCliente(cliente);
-                if (erro.Erro == 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, erro.Descricao);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, erro.Descricao);
-                }
-            }
-
-            catch (Exception exc)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, erro.Descricao);
-            }
-        }
-
-
-
-        public HttpResponseMessage Delete(string id)
-        {
-
-
-            Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-
-            try
-            {
-
-                erro = Lib_Primavera.PriIntegration.DelCliente(id);
-
-                if (erro.Erro == 0)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, erro.Descricao);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, erro.Descricao);
-                }
-
-            }
-
-            catch (Exception exc)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, erro.Descricao);
-
-            }
-
-        }
-
-
     }
 }

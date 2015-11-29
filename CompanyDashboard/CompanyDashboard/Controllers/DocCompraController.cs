@@ -19,8 +19,7 @@ namespace CompanyDashboard.Controllers
             return Lib_Primavera.PriIntegration.Compras_List();
         }
 
-        
-        // GET api/cliente/5    
+        // GET api/doccompra/5    
         public object Get(string id)
         {
             if (id == "totalabs")
@@ -36,8 +35,7 @@ namespace CompanyDashboard.Controllers
                     Lib_Primavera.Model.DocCompra doccompra = Lib_Primavera.PriIntegration.Compra_Get(id);
                     if (doccompra == null)
                     {
-                        throw new HttpResponseException(
-                                Request.CreateResponse(HttpStatusCode.NotFound));
+                        return Request.CreateResponse(HttpStatusCode.NotFound, "O DocCompra com o id " + id + " não existe!");
 
                     }
                     else
@@ -47,35 +45,32 @@ namespace CompanyDashboard.Controllers
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest);
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/doccompra/totalabs ou api/doccompra/[idDocCompra]");
                 }
             }
 
         }
-        // GET api/Doccompra/months/x
+        // GET api/doccompra/months/x
         public Object Get(string id, string param)
         {
             int n;
             bool isNumeric = int.TryParse(param, out n);
             if (isNumeric && id == "months")
             {
-                return Lib_Primavera.PriIntegration.Compras_List_Months(id, n);
+                return Lib_Primavera.PriIntegration.Compras_List_Months(n);
             }
             else if (isNumeric && id == "years")
             {
-                return Lib_Primavera.PriIntegration.Compras_List_Years2(id, n);
+                return Lib_Primavera.PriIntegration.Compras_List_Years2(n);
             }
             else if (isNumeric && id == "year")
             {
-                return Lib_Primavera.PriIntegration.Compras_List_Year(id, n);
+                return Lib_Primavera.PriIntegration.Compras_List_Year(n);
             }
             else
             {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.BadRequest));
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: (1)api/doccompra/months/[numMeses] (2)api/doccompra/years/[numAnos] (3)api/doccompra/weeks/[numSemanas] (4)api/doccompra/year/[ano]");
             }
-            throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
         }
 
         // GET api/Doccompra/week/DD-MM-YYYY/DD-MM-YYYY
@@ -83,9 +78,15 @@ namespace CompanyDashboard.Controllers
         // GET api/Doccompra/month/DD-MM-YYYY/DD-MM-YYYY
         public Object Get(string id, string param, string param2)
         {
+            string pattern = "([1-9]|0[1-9]|[12][0-9]|3[01])[-]([1-9]|0[1-9]|1[012])[-][0-9]{4}$";
+
+            if(!(System.Text.RegularExpressions.Regex.IsMatch(param, pattern) && System.Text.RegularExpressions.Regex.IsMatch(param2, pattern))){
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Data inválida, deve estar no formato dd-mm-aaaa!\nExemplo: 01-01-1901");
+            }
+
             if (id == "month" || id == "week" || id == "year")
             {
-                return Lib_Primavera.PriIntegration.Compras_List_period(id, param, param2);
+                return Lib_Primavera.PriIntegration.Compras_List_period(param, param2);
             }
             else if (id == "totalper")
             {
@@ -93,34 +94,16 @@ namespace CompanyDashboard.Controllers
             }
             else
             {
-                throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.BadRequest));
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/doccompra/month/DD-MM-YYYY/DD-MM-YYYY");
             }
-            throw new HttpResponseException(
-                        Request.CreateResponse(HttpStatusCode.NotFound));
+          
         }
-
-
-        /*public HttpResponseMessage Post(Lib_Primavera.Model.DocCompra dc)
+        //Precisamos de fazer novos webservices conforme o prof disse
+        public Object Get(string id, string param, string param2, string param3, string param4)
         {
-            Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-            erro = Lib_Primavera.PriIntegration.VGR_New(dc);
-
-            if (erro.Erro == 0)
-            {
-                var response = Request.CreateResponse(
-                   HttpStatusCode.Created, dc.id);
-                string uri = Url.Link("DefaultApi", new { DocId = dc.id });
-                response.Headers.Location = new Uri(uri);
-                return response;
-            }
-
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-
-        }*/
+            //Adicionei mais parâmetros porque acho que vão ser precisos
+            return 0;
+        }
 
     }
 }
