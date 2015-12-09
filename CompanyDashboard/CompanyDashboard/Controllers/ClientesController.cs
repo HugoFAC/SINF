@@ -18,7 +18,6 @@ namespace CompanyDashboard.Controllers
                 return Lib_Primavera.PriIntegration.ListaClientes();
         }
 
-
         // GET api/clientes/5    
         public Object Get(string id)
         {
