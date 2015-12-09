@@ -51,6 +51,23 @@ namespace CompanyDashboard.Controllers
             }
         }
 
+        // GET pi/artigos/top/5/year/2013
+        public Object Get(string id, string param, string param2, string param3)
+        {
+            int numArtigos, year;
+            bool isNumeric = int.TryParse(param, out numArtigos);
+            bool isNumeric2 = int.TryParse(param3, out year);
+            if (id == "top" && param2 == "year" && isNumeric && isNumeric2)
+            {
+                IEnumerable<Lib_Primavera.Model.Artigo> artigos = Lib_Primavera.PriIntegration.GetTopArtigosYear(numArtigos, year);
+                return artigos;
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/artigos/top/5/year/2013");
+            }
+        }
+
         //Precisamos de fazer novos webservices conforme o prof disse
         public Object Get(string id, string param, string param2, string param3, string param4)
         {

@@ -49,11 +49,21 @@ namespace CompanyDashboard.Controllers
             }
         }
 
-        //Precisamos de fazer novos webservices conforme o prof disse
-        public Object Get(string id, string param, string param2, string param3, string param4)
+        // GET api/clientes/top/5/year/2013
+        public Object Get(string id, string param, string param2, string param3)
         {
-            //Adicionei mais parâmetros porque acho que vão ser precisos
-            return 0;
+            int numClientes, year;
+            bool isNumeric = int.TryParse(param, out numClientes);
+            bool isNumeric2 = int.TryParse(param3, out year);
+            if (id == "top" && param2 == "year" && isNumeric && isNumeric2)
+            {
+                IEnumerable<Lib_Primavera.Model.Cliente> clientes = Lib_Primavera.PriIntegration.GetTopClientesYear(numClientes, year);
+                return clientes;
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/clientes/top/5/year/2013");
+            }
         }
     }
 }
