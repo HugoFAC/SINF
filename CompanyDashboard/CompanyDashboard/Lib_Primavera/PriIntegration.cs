@@ -1644,5 +1644,48 @@ namespace CompanyDashboard.Lib_Primavera
 
         #endregion DocsVenda
 
+        public static IEnumerable<Model.Lucro> GetLucro(int year)
+        {
+            
+            StdBELista objListVendas;
+            StdBELista objListCompras;
+            List<Model.Lucro> listlucro = new List<Model.Lucro>();
+            double totalV = 0, totalC = 0;
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+            {
+                for (int i = 1; i < 13; i++)
+                {
+                    Model.Lucro dl = new Model.Lucro();
+
+                    if (i < 10)
+                    {
+                        dl.month = String.Format(year + "-0" + i);
+                    }
+                    else
+                    {
+                        dl.month = String.Format(year + "-" + i);
+                    }
+
+                    objListVendas = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecDoc WHERE Tipodoc = 'FA' AND DATEPART(yyyy, Data) = '" + year + "' AND DATEPART(mm, Data) = '" + i + "'");
+                    while (!objListVendas.NoFim())
+                    {
+                        //dl.month = objListVendas.Valor("total");
+                        totalV += objListVendas.Valor("total");
+                        objListVendas.Seguinte();
+                    }
+                    dl.vendas = totalV;
+                    objListCompras = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecCompras WHERE Tipodoc != 'COT' AND Tipodoc != 'PCO' AND DATEPART(yyyy, DataDoc) = '" + year + "' AND DATEPART(mm, DataDoc) = '" + i + "'");
+                    while (!objListCompras.NoFim())
+                    {
+                        //dl.month = objListCompras.Valor("total");
+                        totalC += objListCompras.Valor("total");
+                        objListCompras.Seguinte();
+                    }
+                    dl.compras = totalC;
+                    listlucro.Add(dl);
+                }
+            }
+            return listlucro;
+        }
     }
 }
