@@ -80,22 +80,47 @@ namespace CompanyDashboard.Controllers
         {
             string pattern = "([1-9]|0[1-9]|[12][0-9]|3[01])[-]([1-9]|0[1-9]|1[012])[-][0-9]{4}$";
 
-            if(!(System.Text.RegularExpressions.Regex.IsMatch(param, pattern) && System.Text.RegularExpressions.Regex.IsMatch(param2, pattern))){
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "Data inválida, deve estar no formato dd-mm-aaaa!\nExemplo: 01-01-1901");
+            switch (id)
+            {
+                case "totalabs":
+                    int year;
+                    bool isNumeric = int.TryParse(param2, out year);
+                    if (isNumeric && param == "year")
+                    {
+                        return Lib_Primavera.PriIntegration.VendasTotalAbsYear(year);
+                    }
+                    else
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/docvenda/totalabs/year/YYYY");
+                    };
+                case "week":
+                    if (!(System.Text.RegularExpressions.Regex.IsMatch(param, pattern) && System.Text.RegularExpressions.Regex.IsMatch(param2, pattern)))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Data inválida, deve estar no formato dd-mm-aaaa!\nExemplo: 01-01-1901");
+                    }
+                    return Lib_Primavera.PriIntegration.Vendas_List_period(param, param2);
+                case "month":
+                    if (!(System.Text.RegularExpressions.Regex.IsMatch(param, pattern) && System.Text.RegularExpressions.Regex.IsMatch(param2, pattern)))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Data inválida, deve estar no formato dd-mm-aaaa!\nExemplo: 01-01-1901");
+                    }
+                    return Lib_Primavera.PriIntegration.Vendas_List_period(param, param2);
+                case "year":
+                    if (!(System.Text.RegularExpressions.Regex.IsMatch(param, pattern) && System.Text.RegularExpressions.Regex.IsMatch(param2, pattern)))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Data inválida, deve estar no formato dd-mm-aaaa!\nExemplo: 01-01-1901");
+                    }
+                    return Lib_Primavera.PriIntegration.Vendas_List_period(param, param2);
+                case "totalper":
+                    if (!(System.Text.RegularExpressions.Regex.IsMatch(param, pattern) && System.Text.RegularExpressions.Regex.IsMatch(param2, pattern)))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Data inválida, deve estar no formato dd-mm-aaaa!\nExemplo: 01-01-1901");
+                    }
+                    return Lib_Primavera.PriIntegration.Vendas_Total_per(param, param2);
+                default:
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/docvenda/month/DD-MM-YYYY/DD-MM-YYYY ou api/docvenda/totalabs/year/YYYY");
             }
 
-            if (id == "month" || id == "week" || id == "year")
-            {
-                return Lib_Primavera.PriIntegration.Vendas_List_period(param,param2);
-            }
-            else if (id == "totalper")
-            {
-                return Lib_Primavera.PriIntegration.Vendas_Total_per(param, param2);
-            }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/docvenda/month/DD-MM-YYYY/DD-MM-YYYY");
-            }
         }
 
         public HttpResponseMessage Post(Lib_Primavera.Model.DocVenda dv)

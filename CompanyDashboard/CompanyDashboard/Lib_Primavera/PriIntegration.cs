@@ -790,6 +790,24 @@ namespace CompanyDashboard.Lib_Primavera
             return totalC;
         }
 
+        public static float ComprasTotalAbsYear(int year)
+        {
+
+            StdBELista objListCab;
+            Model.DocCompra dv = new Model.DocCompra();
+            float totalC = 0;
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+            {
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecCompras WHERE Tipodoc != 'COT' AND Tipodoc != 'PCO' AND DATEPART(yyyy, DataDoc) = '" + year + "'");
+                while (!objListCab.NoFim())
+                {
+                    totalC += objListCab.Valor("total");
+                    objListCab.Seguinte();
+                }
+            }
+            return totalC;
+        }
+
         public static float Compras_Total_per(String start, String finish)
         {
 
@@ -1207,6 +1225,25 @@ namespace CompanyDashboard.Lib_Primavera
             }
             return totalV;
         }
+
+        public static float VendasTotalAbsYear(int year)
+        {
+
+            StdBELista objListCab;
+            Model.DocCompra dv = new Model.DocCompra();
+            float totalC = 0;
+            if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
+            {
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecDoc WHERE Tipodoc = 'FA' AND DATEPART(yyyy, Data) = '" + year + "'");
+                while (!objListCab.NoFim())
+                {
+                    totalC += objListCab.Valor("total");
+                    objListCab.Seguinte();
+                }
+            }
+            return totalC;
+        }
+
         public static float Vendas_Total_per(string start, string finish)
         {
 

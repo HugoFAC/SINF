@@ -8,9 +8,9 @@
     var total_compras = Json.Decode(json);
     json = client.DownloadString("http://localhost:49413/api/clientes/top/5");
     var top_clientes = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/doccompra/year/2014");
+    json = client.DownloadString("http://localhost:49413/api/doccompra/years/3");
     var compras_last3years = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/docvenda/year/2014");
+    json = client.DownloadString("http://localhost:49413/api/docvenda/years/3");
     var vendas_last3years = Json.Decode(json);
 }
 
@@ -91,7 +91,7 @@
                                 <p class="text-uppercase mar-btm text-sm">Vendas</p>
                                 <i class="fa fa-shopping-cart fa-5x"></i>
                                 <hr>
-                                <p class="h2 text-thin">@total_vendas <strong>€</strong></p>
+                                <p class="h2 text-thin" id="total-vendas">@total_vendas <strong>€</strong></p>
                             </div>
                         </div>
 </div>
@@ -101,7 +101,7 @@
                             <p class="text-uppercase mar-btm text-sm">Compras</p>
                             <i class="fa fa-truck fa-5x"></i>
                             <hr>
-                            <p class="h2 text-thin">@total_compras <strong>€</strong></p>
+                            <p class="h2 text-thin" id="total-compras">@total_compras <strong>€</strong></p>
                         </div>
                     </div>
                 </div>
@@ -211,6 +211,16 @@
     });
 
     jQuery(function ($) {
+
+        $(document).on({
+            ajaxStart: function() { 
+                $('#wait').css('display', 'block'); 
+            },
+            ajaxStop: function() { 
+                $('#wait').css('display', 'none');
+            }    
+        });
+
         $('#week-btn').on('click', function () {
             //change data values using
             //firstchart.options.data = newData;
@@ -244,7 +254,7 @@
             }
             else if(teste == 3){
                 $.ajax({
-                    async: false,
+                    async: true,
                     type: 'GET',
                     url: 'http://localhost:49413/api/doccompra/years/' + teste,
                     success: function(response) {
@@ -259,7 +269,7 @@
                 });
 
                 $.ajax({
-                    async: false,
+                    async: true,
                     type: 'GET',
                     url: 'http://localhost:49413/api/docvenda/years/' + teste,
                     success: function(response) {
@@ -270,16 +280,15 @@
                             datatemp.a = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
                             data_crescimento.push(datatemp);
                         }
+                        firstchart.setData(data_crescimento);
                     }
                 });
-
-                firstchart.setData(data_crescimento);
 
             }
             else{
                 
                 $.ajax({
-                    async: false,
+                    async: true,
                     type: 'GET',
                     url: 'http://localhost:49413/api/doccompra/year/' + teste,
                     success: function(response) {
@@ -294,7 +303,7 @@
                 });
 
                 $.ajax({
-                    async: false,
+                    async: true,
                     type: 'GET',
                     url: 'http://localhost:49413/api/docvenda/year/' + teste,
                     success: function(response) {
@@ -305,9 +314,64 @@
                             datatemp.a = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
                             data_crescimento.push(datatemp);
                         }
+                        firstchart.setData(data_crescimento);
+                        firstchart.redraw();
                     }
                 });
-                firstchart.setData(data_crescimento);
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/clientes/top/5/year/' + teste,
+                    success: function(response) {
+                        data_top_clientes.splice(0,data_top_clientes.length);
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {label: 'teste', value: '2' };
+
+                            datatemp.label = response[i].NomeCliente;
+                            datatemp.value = parseFloat(Math.round(response[i].TotalGasto * 100) / 100).toFixed(2);
+                            data_top_clientes.push(datatemp);
+                        }
+                        secondchart.setData(data_top_clientes);
+                        secondchart.redraw();
+                    }
+                });
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/artigos/top/5/year/' + teste,
+                    success: function(response) {
+                        data_top_artigos.splice(0,data_top_artigos.length);
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {label: 'teste', value: '2' };
+
+                            datatemp.label = response[i].DescArtigo;
+                            datatemp.value = parseFloat(Math.round(response[i].TotalVendas * 100) / 100).toFixed(2);
+                            data_top_artigos.push(datatemp);
+                        }
+                        thirdchart.setData(data_top_artigos);
+                        thirdchart.redraw();
+                    }
+                });
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/doccompra/totalabs/year/' + teste,
+                    success: function(response) {
+                        $('#total-compras').html(response);
+                    }
+                });
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/docvenda/totalabs/year/' + teste,
+                    success: function(response) {
+                        $('#total-vendas').html(response);
+                    }
+                });
                 $('#year-selection').hide();
             }
 
