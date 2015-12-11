@@ -1686,7 +1686,10 @@ namespace CompanyDashboard.Lib_Primavera
                         objListCompras.Seguinte();
                     }
                     dl.compras = totalC;
-                    dl.lucro = dl.vendas - dl.compras;
+                    if (dl.compras > 0)
+                        dl.lucro = dl.vendas - dl.compras;
+                    else
+                        dl.lucro = dl.vendas + dl.compras;
                     listlucro.Add(dl);
                 }
             }
