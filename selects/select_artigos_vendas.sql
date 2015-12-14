@@ -1,0 +1,1 @@
+SELECT Artigo.Artigo , SUM(quantidade) AS qtd, Artigo.Descricao, MIN(Artigo.STKActual) FROM Artigo FULL OUTER JOIN LinhASDoc ON LinhASDoc.Artigo = Artigo.Artigo FULL OUTER JOIN cabecdoc ON IdCabecDoc = cabecdoc.id WHERE Artigo.Artigo IS NOT NULL GROUP BY Artigo.Artigo, Artigo.Descricao ORDER BY qtd

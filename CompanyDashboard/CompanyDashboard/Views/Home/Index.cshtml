@@ -12,6 +12,8 @@
     var compras_last3years = Json.Decode(json);
     json = client.DownloadString("http://localhost:49413/api/docvenda/years/3");
     var vendas_last3years = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/lucro/year/2013");
+    var lucro = Json.Decode(json);
 }
 
 <div class="container-fluid">
@@ -180,7 +182,7 @@
         data_top_clientes.push(datatemp);
     }
 
-    var compras_last3years =  @Html.Raw(Json.Encode(@compras_last3years));
+    @*var compras_last3years =  @Html.Raw(Json.Encode(@compras_last3years));
     var data_crescimento = [];
     for(var i = 0; i < compras_last3years.length; i++){
         var datatemp = {y: 'teste', b: '2' };
@@ -197,28 +199,63 @@
         datatemp.y = vendas_last3years[i].Num;
         datatemp.a = parseFloat(Math.round(vendas_last3years[i].Total * 100) / 100).toFixed(2);
         data_crescimento.push(datatemp);
+    }*@
+
+    var data_crescimento = @Html.Raw(Json.Encode(@lucro));
+
+
+    function formatDate(myDate){
+        var m_names = new Array("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez");
+
+        var d = new Date(myDate);
+
+        var curr_month = d.getMonth();
+        //var curr_year = d.getFullYear();
+        //return (m_names[curr_month] + "-" + curr_year);
+        return (m_names[curr_month]);
     }
 
+    function formatHoverLabel(row, preUnit) {
+        var m_long_names = new Array("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+        var d = new Date(row.month);
+        var curr_month = d.getMonth();
+
+        var salesText = "Balanço para "+m_long_names[curr_month];
+        salesText = salesText + "<br/>"+labelsInGraph[0]+": "+preUnit+row['vendas'];
+        salesText = salesText + "<br/>"+labelsInGraph[1]+": "+preUnit+row['compras'];
+        salesText = salesText + "<br/>"+labelsInGraph[2]+": "+preUnit+row['lucro'];
+        return salesText;
+    }
+
+    labelsInGraph = ['Vendas', 'Compras', 'Lucro'];
     var firstchart = Morris.Line({
         element: 'firstchart',
         data: data_crescimento,
-        xkey: 'y',
-        ykeys: ['a', 'b'],
-        lineColors: ['green', 'red'],
-        resize: true,
-        labels: ['Vendas', 'Compras'],
-        xlabels: 'month'
+        xkey: 'month',
+        // A list of names of data record attributes that contain y-values.
+        ykeys: ['vendas', 'compras', 'lucro'],
+        lineColors: ['green', 'red', 'blue'],
+        // Labels for the ykeys -- will be displayed when you hover over the
+        // chart.
+        labels: labelsInGraph,
+        hoverCallback: function (index, options, content, row) {
+            return formatHoverLabel(row, options.preUnits);
+        },
+        xLabelFormat: function(str){
+            return formatDate(str);
+        },
+        preUnits: '€'
     });
 
     jQuery(function ($) {
 
         $(document).on({
-            ajaxStart: function() { 
-                $('#wait').css('display', 'block'); 
+            ajaxStart: function() {
+                $('#wait').css('display', 'block');
             },
-            ajaxStop: function() { 
+            ajaxStop: function() {
                 $('#wait').css('display', 'none');
-            }    
+            }
         });
 
         $('#week-btn').on('click', function () {
@@ -247,7 +284,6 @@
         });
         $('#year-selection').on('change', function() {
             var teste = $('#selYear').val();
-            console.log(teste);
             var data_crescimento = [];
             if(teste == null){
                 return;
@@ -286,35 +322,13 @@
 
             }
             else{
-                
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/doccompra/year/' + teste,
-                    success: function(response) {
-                        for(var i = 0; i < response.length; i++){
-                            var datatemp = {y: 'teste', b: '2' };
-
-                            datatemp.y = response[i].Num;
-                            datatemp.b = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
-                            data_crescimento.push(datatemp);
-                        }
-                    }
-                });
 
                 $.ajax({
                     async: true,
                     type: 'GET',
-                    url: 'http://localhost:49413/api/docvenda/year/' + teste,
+                    url: 'http://localhost:49413/api/lucro/year/' + teste,
                     success: function(response) {
-                        for(var i = 0; i < response.length; i++){
-                            var datatemp = {y: 'teste', a: '2' };
-
-                            datatemp.y = response[i].Num;
-                            datatemp.a = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
-                            data_crescimento.push(datatemp);
-                        }
-                        firstchart.setData(data_crescimento);
+                        firstchart.setData(response);
                         firstchart.redraw();
                     }
                 });

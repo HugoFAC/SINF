@@ -780,7 +780,7 @@ namespace CompanyDashboard.Lib_Primavera
             float totalC = 0;
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecCompras WHERE Tipodoc != 'COT' AND Tipodoc != 'PCO'");
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecCompras WHERE (Tipodoc = 'VFA' OR Tipodoc = 'VFP' OR TipoDoc = 'VFR' OR TipoDoc = 'VNC' OR TipoDoc = 'VGR' OR TipoDoc = 'VVD')");
                 while (!objListCab.NoFim())
                 {
                     totalC += objListCab.Valor("total");
@@ -798,7 +798,7 @@ namespace CompanyDashboard.Lib_Primavera
             float totalC = 0;
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecCompras WHERE Tipodoc != 'COT' AND Tipodoc != 'PCO' AND DATEPART(yyyy, DataDoc) = '" + year + "'");
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecCompras WHERE (Tipodoc = 'VFA' OR Tipodoc = 'VFP' OR TipoDoc = 'VFR' OR TipoDoc = 'VNC' OR TipoDoc = 'VGR' OR TipoDoc = 'VVD') AND DATEPART(yyyy, DataDoc) = '" + year + "'");
                 while (!objListCab.NoFim())
                 {
                     totalC += objListCab.Valor("total");
@@ -816,7 +816,7 @@ namespace CompanyDashboard.Lib_Primavera
             float totalC = 0;
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecCompras WHERE Tipodoc != 'COT' AND Tipodoc != 'PCO' AND DataDoc between '" + start + "' and'" + finish + "'");
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecCompras WHERE (Tipodoc = 'VFA' OR Tipodoc = 'VFP' OR TipoDoc = 'VFR' OR TipoDoc = 'VNC' OR TipoDoc = 'VGR' OR TipoDoc = 'VVD') AND DataDoc between '" + start + "' and'" + finish + "'");
                 while (!objListCab.NoFim())
                 {
                     totalC += objListCab.Valor("total");
@@ -997,7 +997,7 @@ namespace CompanyDashboard.Lib_Primavera
                 DateTime today = DateTime.Now;
                 DateTime yearsBack = today.AddYears(0 - years);
                 string newdate = yearsBack.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                objListCab = PriEngine.Engine.Consulta("select CAST(YEAR(DataVencimento) AS VARCHAR(4)) + '-' + CAST(MONTH(DataVencimento) AS VARCHAR(2)) as data, sum(TotalMerc-TotalDesc) as total, sum(TotalDesc) as ds from cabecCompras Where TipoDoc != 'ECF' AND TipoDoc != 'GR' and DataVencimento >= '" + newdate + "' group by CAST(YEAR(DataVencimento) AS VARCHAR(4)), CAST(MONTH(DataVencimento) AS VARCHAR(2)) order by CAST(YEAR(DataVencimento) AS VARCHAR(4)), right(100+CAST(MONTH(DataVencimento) AS VARCHAR(2)),2) asc");
+                objListCab = PriEngine.Engine.Consulta("select CAST(YEAR(DataVencimento) AS VARCHAR(4)) + '-' + CAST(MONTH(DataVencimento) AS VARCHAR(2)) as data, sum(TotalMerc-TotalDesc) as total, sum(TotalDesc) as ds from cabecCompras Where (Tipodoc = 'VFA' OR Tipodoc = 'VFP' OR TipoDoc = 'VFR' OR TipoDoc = 'VNC' OR TipoDoc = 'VGR' OR TipoDoc = 'VVD') and DataVencimento >= '" + newdate + "' group by CAST(YEAR(DataVencimento) AS VARCHAR(4)), CAST(MONTH(DataVencimento) AS VARCHAR(2)) order by CAST(YEAR(DataVencimento) AS VARCHAR(4)), right(100+CAST(MONTH(DataVencimento) AS VARCHAR(2)),2) asc");
                 while (!objListCab.NoFim())
                 {
                     DateTime retrievedData = Convert.ToDateTime(objListCab.Valor("data"));
@@ -1021,7 +1021,7 @@ namespace CompanyDashboard.Lib_Primavera
 
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                objListCab = PriEngine.Engine.Consulta("select CAST(MONTH(DataVencimento) AS VARCHAR(2)) as data, sum(TotalMerc-TotalDesc) as total, sum(TotalDesc) as ds from cabecCompras Where TipoDoc != 'ECF' AND TipoDoc != 'GR' and YEAR(DataVencimento) = YEAR('" + year + "') group by CAST(MONTH(DataVencimento) AS VARCHAR(2)) order by right(100+CAST(MONTH(DataVencimento) AS VARCHAR(2)),2) asc;");
+                objListCab = PriEngine.Engine.Consulta("select CAST(MONTH(DataVencimento) AS VARCHAR(2)) as data, sum(TotalMerc-TotalDesc) as total, sum(TotalDesc) as ds from cabecCompras Where (Tipodoc = 'VFA' OR Tipodoc = 'VFP' OR TipoDoc = 'VFR' OR TipoDoc = 'VNC' OR TipoDoc = 'VGR' OR TipoDoc = 'VVD') and YEAR(DataVencimento) = YEAR('" + year + "') group by CAST(MONTH(DataVencimento) AS VARCHAR(2)) order by right(100+CAST(MONTH(DataVencimento) AS VARCHAR(2)),2) asc;");
                 while (!objListCab.NoFim())
                 {
                     dc = new Model.Month();
@@ -1216,7 +1216,7 @@ namespace CompanyDashboard.Lib_Primavera
             float totalV = 0;
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecDoc WHERE Tipodoc = 'FA'");
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecDoc WHERE (Tipodoc = 'FA' OR TipoDoc = 'NC' OR TipoDoc = 'VD')");
                 while (!objListCab.NoFim())
                 {
                     totalV += objListCab.Valor("total");
@@ -1234,7 +1234,7 @@ namespace CompanyDashboard.Lib_Primavera
             float totalC = 0;
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecDoc WHERE Tipodoc = 'FA' AND DATEPART(yyyy, Data) = '" + year + "'");
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecDoc WHERE (Tipodoc = 'FA' OR TipoDoc = 'NC' OR TipoDoc = 'VD') AND DATEPART(yyyy, Data) = '" + year + "'");
                 while (!objListCab.NoFim())
                 {
                     totalC += objListCab.Valor("total");
@@ -1252,7 +1252,7 @@ namespace CompanyDashboard.Lib_Primavera
             float totalV = 0;
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecDoc WHERE Tipodoc = 'FA' AND Data between '" + start + "' and'" + finish + "'");
+                objListCab = PriEngine.Engine.Consulta("SELECT SUM(TotalMerc) as total From CabecDoc WHERE (Tipodoc = 'FA' OR TipoDoc = 'NC' OR TipoDoc = 'VD') AND Data between '" + start + "' and'" + finish + "'");
                 while (!objListCab.NoFim())
                 {
                     totalV += objListCab.Valor("total");
@@ -1383,7 +1383,7 @@ namespace CompanyDashboard.Lib_Primavera
                 DateTime today = DateTime.Now;
                 DateTime yearsBack = today.AddYears(0 - years);
                 string newdate = yearsBack.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                objListCab = PriEngine.Engine.Consulta("select CAST(YEAR(DataVencimento) AS VARCHAR(4)) + '-' + CAST(MONTH(DataVencimento) AS VARCHAR(2)) as data, sum(TotalMerc-TotalDesc) as total, sum(TotalDesc) as ds from cabecDoc Where TipoDoc != 'ECL' AND TipoDoc != 'GR' and DataVencimento >= '" + newdate + "' group by CAST(YEAR(DataVencimento) AS VARCHAR(4)), CAST(MONTH(DataVencimento) AS VARCHAR(2)) order by CAST(YEAR(DataVencimento) AS VARCHAR(4)), right(100+CAST(MONTH(DataVencimento) AS VARCHAR(2)),2) asc");
+                objListCab = PriEngine.Engine.Consulta("select CAST(YEAR(DataVencimento) AS VARCHAR(4)) + '-' + CAST(MONTH(DataVencimento) AS VARCHAR(2)) as data, sum(TotalMerc-TotalDesc) as total, sum(TotalDesc) as ds from cabecDoc Where (Tipodoc = 'FA' OR TipoDoc = 'NC' OR TipoDoc = 'VD') and DataVencimento >= '" + newdate + "' group by CAST(YEAR(DataVencimento) AS VARCHAR(4)), CAST(MONTH(DataVencimento) AS VARCHAR(2)) order by CAST(YEAR(DataVencimento) AS VARCHAR(4)), right(100+CAST(MONTH(DataVencimento) AS VARCHAR(2)),2) asc");
                 while (!objListCab.NoFim())
                 {
                     DateTime retrievedData = Convert.ToDateTime(objListCab.Valor("data"));
@@ -1407,7 +1407,7 @@ namespace CompanyDashboard.Lib_Primavera
 
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
-                objListCab = PriEngine.Engine.Consulta("select CAST(MONTH(DataVencimento) AS VARCHAR(2)) as data, sum(TotalMerc-TotalDesc) as total, sum(TotalDesc) as ds from cabecDoc Where TipoDoc != 'ECL' AND TipoDoc != 'GR' and YEAR(DataVencimento) = YEAR('" + year + "') group by CAST(MONTH(DataVencimento) AS VARCHAR(2)) order by right(100+CAST(MONTH(DataVencimento) AS VARCHAR(2)),2) asc;");
+                objListCab = PriEngine.Engine.Consulta("select CAST(MONTH(DataVencimento) AS VARCHAR(2)) as data, sum(TotalMerc-TotalDesc) as total, sum(TotalDesc) as ds from cabecDoc Where (Tipodoc = 'FA' OR TipoDoc = 'NC' OR TipoDoc = 'VD') and YEAR(DataVencimento) = YEAR('" + year + "') group by CAST(MONTH(DataVencimento) AS VARCHAR(2)) order by right(100+CAST(MONTH(DataVencimento) AS VARCHAR(2)),2) asc;");
                 while (!objListCab.NoFim())
                 {
                     dv = new Model.Month();
@@ -1672,22 +1672,22 @@ namespace CompanyDashboard.Lib_Primavera
                         dl.month = String.Format(year + "-" + i);
                     }
 
-                    objListVendas = PriEngine.Engine.Consulta("SELECT TotalMerc as total From CabecDoc WHERE Tipodoc = 'FA' AND DATEPART(yyyy, Data) = '" + year + "' AND DATEPART(mm, Data) = '" + i + "'");
+                    objListVendas = PriEngine.Engine.Consulta("SELECT TotalMerc as total From CabecDoc WHERE (Tipodoc = 'FA' OR TipoDoc = 'NC' OR TipoDoc = 'VD') AND DATEPART(yyyy, Data) = '" + year + "' AND DATEPART(mm, Data) = '" + i + "'");
                     while (!objListVendas.NoFim())
                     {
                         totalV += objListVendas.Valor("total");
                         objListVendas.Seguinte();
                     }
-                    dl.vendas = totalV;
-                    objListCompras = PriEngine.Engine.Consulta("SELECT TotalMerc as total From CabecCompras WHERE Tipodoc != 'COT' AND Tipodoc != 'PCO' AND DATEPART(yyyy, DataDoc) = '" + year + "' AND DATEPART(mm, DataDoc) = '" + i + "'");
+                    dl.vendas = Math.Round(totalV, 2);
+                    objListCompras = PriEngine.Engine.Consulta("SELECT TotalMerc as total From CabecCompras WHERE (Tipodoc = 'VFA' OR TipoDoc = 'VNC' OR TipoDoc = 'VVD') AND DATEPART(yyyy, DataDoc) = '" + year + "' AND DATEPART(mm, DataDoc) = '" + i + "'");
                     while (!objListCompras.NoFim())
                     {
                         totalC += objListCompras.Valor("total");
                         objListCompras.Seguinte();
                     }
-                    dl.compras = totalC;
+                    dl.compras = Math.Round(totalC, 2);
                     if (dl.compras > 0)
-                        dl.lucro = dl.vendas - dl.compras;
+                        dl.lucro = Math.Round(dl.vendas - dl.compras, 2);
                     else
                         dl.lucro = dl.vendas + dl.compras;
                     listlucro.Add(dl);
