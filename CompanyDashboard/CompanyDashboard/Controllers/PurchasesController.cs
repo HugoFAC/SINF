@@ -11,7 +11,7 @@ namespace CompanyDashboard.Controllers
         //
         // GET: /Purchases/
 
-        public ActionResult Purchases()
+        public ActionResult Index()
         {
             return View();
         }

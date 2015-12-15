@@ -8,7 +8,7 @@ namespace CompanyDashboard.Controllers
 {
     public class SalesController : Controller
     {
-        public ActionResult Sales()
+        public ActionResult Index()
         {
             return View();
         }
