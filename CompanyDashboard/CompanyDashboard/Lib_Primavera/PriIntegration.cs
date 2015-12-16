@@ -687,12 +687,15 @@ namespace CompanyDashboard.Lib_Primavera
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
             {
 
-                objList = PriEngine.Engine.Comercial.Artigos.LstArtigos();
+                objList = PriEngine.Engine.Consulta("select artigo.artigo as id, artigo.descricao, artigo.stkactual as stock, familias.descricao as categoria, artigo.PCMedio as preco from artigo full outer join familias on artigo.Familia = Familias.Familia where artigo IS NOT NULL order by artigo.artigo");
 
                 while (!objList.NoFim())
                 {
                     art = new Model.Artigo();
-                    art.CodArtigo = objList.Valor("artigo");
+                    art.Preco = objList.Valor("preco");
+                    art.Categoria = objList.Valor("categoria");
+                    art.Stock = (int)objList.Valor("stock");
+                    art.CodArtigo = objList.Valor("id");
                     art.DescArtigo = objList.Valor("descricao");
 
                     listArts.Add(art);

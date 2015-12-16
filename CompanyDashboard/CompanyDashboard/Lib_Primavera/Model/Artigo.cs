@@ -41,5 +41,10 @@ namespace CompanyDashboard.Lib_Primavera.Model
             get;
             set;
         }
+        public double Preco
+        {
+            get;
+            set;
+        }
     }
 }
