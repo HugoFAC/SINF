@@ -30,6 +30,7 @@ namespace CompanyDashboard.Lib_Primavera
         }
 
         #endregion Login;
+
         # region Cliente
 
         public static List<Model.Cliente> ListaClientes()
@@ -45,7 +46,7 @@ namespace CompanyDashboard.Lib_Primavera
 
                 //objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
 
-                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, NumContrib as NumContribuinte, Fac_Mor AS campo_exemplo FROM  CLIENTES");
+                objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, NumContrib as NumContribuinte, Fac_Mor AS campo_exemplo FROM  CLIENTES Order BY Nome");
 
                 
                 while (!objList.NoFim())
