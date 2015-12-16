@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "id";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var client = new WebClient();
+    client.Encoding = System.Text.Encoding.UTF8;
+    var id = ViewBag.ID;
+    var url = String.Format("http://localhost:49413/api/artigos/" + @ViewBag.ID);
+    var json = client.DownloadString(url);
+    var artigo = Json.Decode(json);
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li><a href="/">Resumo</a></li>
+                <li><a href="/Sales">Vendas</a></li>
+                <li><a href="/Purchases">Compras</a></li>
+                <li><a href="/Inventory">Inventário</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">@artigo.CodArtigo - @artigo.DescArtigo</h1>
+
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h4><strong>Código de barras:</strong> @artigo.CodBarras</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h4><strong>Categoria:</strong> @artigo.Categoria</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h4><strong>Stock:</strong> @artigo.Stock</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h4><strong>Preço Médio de Compra:</strong> @artigo.Preco €</h4>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h3><strong>Preços de venda ao público:</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h5><strong>IVA:</strong> @artigo.Iva%</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h5><strong>PVP1:</strong> @artigo.PVP1</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h5><strong>PVP2:</strong> @artigo.PVP2</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h5><strong>PVP3:</strong> @artigo.PVP3</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h5><strong>PVP4:</strong> @artigo.PVP4</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h5><strong>PVP5:</strong> @artigo.PVP5</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h5><strong>PVP6:</strong> @artigo.PVP6</h5>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h4><strong>Data última venda:</strong> @artigo.DataUltSaida</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                    <h4><strong>Data última compra:</strong> @artigo.DataUltEntrada</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

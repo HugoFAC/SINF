@@ -87,6 +87,11 @@ namespace CompanyDashboard.Controllers
                 IEnumerable<Lib_Primavera.Model.Artigo> artigos = Lib_Primavera.PriIntegration.GetTopArtigosCompradosYear(numArtigos, year);
                 return artigos;
             }
+            else if (id == "topstock" && param2 == "order" && isNumeric && (param3 == "asc" || param3 == "desc"))
+            {
+                IEnumerable<Lib_Primavera.Model.Artigo> artigos = Lib_Primavera.PriIntegration.GetStockArtigos(numArtigos, param3);
+                return artigos;
+            }
             else
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/artigos/top/5/year/2013");
@@ -99,6 +104,7 @@ namespace CompanyDashboard.Controllers
             //Adicionei mais parâmetros porque acho que vão ser precisos
             return 0;
         }
+
     }
 }
 

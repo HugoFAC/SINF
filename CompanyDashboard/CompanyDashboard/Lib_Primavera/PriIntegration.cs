@@ -423,8 +423,8 @@ namespace CompanyDashboard.Lib_Primavera
 
         public static Lib_Primavera.Model.Artigo GetArtigo(string codArtigo)
         {
-            
-            GcpBEArtigo objArtigo = new GcpBEArtigo();
+
+            StdBELista objArtigo;
             Model.Artigo myArt = new Model.Artigo();
 
             if (PriEngine.InitializeCompany(CompanyDashboard.Properties.Settings.Default.Company.Trim(), CompanyDashboard.Properties.Settings.Default.User.Trim(), CompanyDashboard.Properties.Settings.Default.Password.Trim()) == true)
@@ -436,10 +436,22 @@ namespace CompanyDashboard.Lib_Primavera
                 }
                 else
                 {
-                    objArtigo = PriEngine.Engine.Comercial.Artigos.Edita(codArtigo);
-                    myArt.CodArtigo = objArtigo.get_Artigo();
-                    myArt.DescArtigo = objArtigo.get_Descricao();
-
+                    objArtigo = PriEngine.Engine.Consulta("select Artigo.Artigo as id, Artigo.Descricao as descricao, Artigo.CodBarras, Artigo.Iva, Artigo.PCMedio, Artigo.DataUltEntrada, Artigo.DataUltSaida, Artigo.STKactual as stock, Familias.Descricao as categoria, ArtigoMoeda.PVP1, ArtigoMoeda.PVP2, ArtigoMoeda.PVP3, ArtigoMoeda.PVP4, ArtigoMoeda.PVP5, ArtigoMoeda.PVP6 from Artigo JOIN Familias on Artigo.Familia = Familias.Familia JOIN ArtigoMoeda on ArtigoMoeda.Artigo = Artigo.Artigo where Artigo.Artigo = '"+ codArtigo +"'");
+                    myArt.CodArtigo = objArtigo.Valor("id");
+                    myArt.DescArtigo = objArtigo.Valor("descricao");
+                    myArt.Categoria = objArtigo.Valor("categoria");
+                    myArt.Stock = (int)objArtigo.Valor("stock");
+                    myArt.Preco = objArtigo.Valor("PCMedio");
+                    myArt.PVP1 = objArtigo.Valor("PVP1");
+                    myArt.PVP2 = objArtigo.Valor("PVP2");
+                    myArt.PVP3 = objArtigo.Valor("PVP3");
+                    myArt.PVP4 = objArtigo.Valor("PVP4");
+                    myArt.PVP5 = objArtigo.Valor("PVP5");
+                    myArt.PVP6 = objArtigo.Valor("PVP6");
+                    myArt.CodBarras = objArtigo.Valor("CodBarras");
+                    myArt.Iva = Convert.ToDouble(objArtigo.Valor("Iva"));
+                    myArt.DataUltEntrada = Convert.ToDateTime(objArtigo.Valor("DataUltEntrada"));
+                    myArt.DataUltSaida = Convert.ToDateTime(objArtigo.Valor("DataUltSaida"));
                     return myArt;
                 }
                 
@@ -657,11 +669,7 @@ namespace CompanyDashboard.Lib_Primavera
                     art = new Model.Artigo();
                     art.DescArtigo = objList.Valor("Descricao");
                     art.CodArtigo = objList.Valor("Artigo");
-                    art.Stock = objList.Valor("STKActual");
-                    if (art.Stock < 0)
-                    {
-                        art.Stock = 0;
-                    }
+                    art.Stock = (int)objList.Valor("STKActual");
                     listArts.Add(art);
                     objList.Seguinte();
                     }
@@ -2045,9 +2053,9 @@ namespace CompanyDashboard.Lib_Primavera
                     }
                     else {
                         if (year == 0)
-                            objListCab = PriEngine.Engine.Consulta("SELECT Ano,Mes01CR-Mes02CR-Mes03CR-Mes00CR-Mes01CR-Mes02CR-Mes03CR-Mes04CR-Mes05CR-Mes06CR-Mes07CR-Mes08CR-Mes09CR-Mes10CR-Mes11CR-Mes12CR+Mes01DB+Mes02DB+Mes03DB+Mes04DB+Mes05DB+Mes06DB+Mes07DB+Mes08DB+Mes09DB+Mes10DB+Mes11DB+Mes12DB as valor FROM AcumuladosContas where conta = '71'");
+                            objListCab = PriEngine.Engine.Consulta("SELECT Ano,Mes01CR-Mes02CR-Mes03CR-Mes00CR-Mes01CR-Mes02CR-Mes03CR-Mes04CR-Mes05CR-Mes06CR-Mes07CR-Mes08CR-Mes09CR-Mes10CR-Mes11CR-Mes12CR+Mes01DB+Mes02DB+Mes03DB+Mes04DB+Mes05DB+Mes06DB+Mes07DB+Mes08DB+Mes09DB+Mes10DB+Mes11DB+Mes12DB as valor FROM AcumuladosContas where conta = '22'");
                         else
-                            objListCab = PriEngine.Engine.Consulta("SELECT Ano,Mes01CR-Mes02CR-Mes03CR-Mes00CR-Mes01CR-Mes02CR-Mes03CR-Mes04CR-Mes05CR-Mes06CR-Mes07CR-Mes08CR-Mes09CR-Mes10CR-Mes11CR-Mes12CR+Mes01DB+Mes02DB+Mes03DB+Mes04DB+Mes05DB+Mes06DB+Mes07DB+Mes08DB+Mes09DB+Mes10DB+Mes11DB+Mes12DB as valor FROM AcumuladosContas where conta = '71' AND ano = '" + year + "'");
+                            objListCab = PriEngine.Engine.Consulta("SELECT Ano,Mes01CR-Mes02CR-Mes03CR-Mes00CR-Mes01CR-Mes02CR-Mes03CR-Mes04CR-Mes05CR-Mes06CR-Mes07CR-Mes08CR-Mes09CR-Mes10CR-Mes11CR-Mes12CR+Mes01DB+Mes02DB+Mes03DB+Mes04DB+Mes05DB+Mes06DB+Mes07DB+Mes08DB+Mes09DB+Mes10DB+Mes11DB+Mes12DB as valor FROM AcumuladosContas where conta = '22' AND ano = '" + year + "'");
 
                         while (!objListCab.NoFim())
                         {

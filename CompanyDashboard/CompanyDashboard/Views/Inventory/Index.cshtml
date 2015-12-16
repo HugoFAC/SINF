@@ -4,25 +4,14 @@
 }
 
 @{
-    /*var client = new WebClient();
-    var json = client.DownloadString("http://localhost:49413/api/artigos/top/5");
-    var top_artigos = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/docvenda/totalabs");
-    var total_vendas = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/doccompra/totalabs");
-    var total_compras = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/clientes/top/5");
-    var top_clientes = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/lucro/year/0");
-    var lucro = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/contas/receber/0");
-    var aReceber = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/contas/pagar/0");
-    var aPagar = Json.Decode(json);*/
     var client = new WebClient();
     client.Encoding = System.Text.Encoding.UTF8;
     var json = client.DownloadString("http://localhost:49413/api/artigos/");
     var artigos = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/artigos/topstock/10/order/asc");
+    var asc = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/artigos/topstock/10/order/desc");
+    var desc = Json.Decode(json);
 }
 
 <div class="container-fluid">
@@ -36,19 +25,7 @@
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">Dashboard</h1>
-
-            <div class="row">
-                <div class="col-lg-12 col-sm-12">
-                    <h2>Crescimento</h2>
-                    <br />
-                    <br />
-                    <div id="firstchart"></div>
-                    <hr />
-                    <br />
-                    <br />
-                </div>
-            </div>
+            <h1 class="page-header">Inventário</h1>
 
             <div class="row">
                 <div class="row">
@@ -68,7 +45,7 @@
                                 <tbody>
                                     @foreach (var artigo in artigos)
                                     {
-                                        <tr>
+                                        <tr id="@artigo.CodArtigo">
                                             <td>@artigo.CodArtigo</td>
                                             <td>@artigo.DescArtigo</td>
                                             <td>@(String.IsNullOrEmpty(artigo.Categoria) ? "Outros" : artigo.Categoria)</td>
@@ -80,25 +57,31 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                      
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6" id="more-stock">
+                        <h2 class="text-center">Items com mais stock</h2>
+                        <div id="firstchart"></div>
                     </div>
-
-          
-                    <div class="row">
-                        <div class="col-lg-6 col-sm-6">
-                            <h2 class="text-center">Top Clientes</h2>
-                            <div id="secondchart"></div>
-                        </div>
-                        <div class="col-lg-6 col-sm-6" id="top-artigos">
-                            <h2 class="text-center">Top Produtos</h2>
-                            <div id="thirdchart"></div>
-                        </div>
+                    <div class="col-lg-6 col-sm-6" id="less-stock">
+                        <h2 class="text-center">Items com menos stock</h2>
+                        <div id="secondchart"></div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </div>
 
 
 <script>
+
+    $('table tr').each(function () {
+        $(this).on("click", function(){
+            window.location.href = "Produtos/id/" + $(this).attr("id");
+        })
+        });
 
     $('table.table_data').each(function () {
         var currentPage = 0;
@@ -125,12 +108,9 @@
         $div.html($pager);
         $div.insertAfter($table.parent()).find('li.page-number:first').addClass('active');
 
-
     });
 
-    $('.dropdown-menu.year-dropdown select').click(function (e) {
-        e.stopPropagation();
-    });
+    $('#year-dropdown').remove();
 
     $("#sales-panel").css('cursor', 'pointer');
     $("#purchases-panel").css('cursor', 'pointer');
@@ -142,202 +122,42 @@
         window.location.href = "Purchases";
     });
 
+    var topstock_asc =  @Html.Raw(Json.Encode(@asc));
+    var data_topstock_asc = [];
+    for(var i = 0; i < topstock_asc.length; i++){
+        var datatemp = {Produto: 'teste', Stock: '3'};
 
-
-    function formatDate(myDate){
-        var m_names = new Array("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez");
-
-        var d = new Date(myDate);
-
-        var curr_month = d.getMonth();
-        //var curr_year = d.getFullYear();
-        //return (m_names[curr_month] + "-" + curr_year);
-        return (m_names[curr_month]);
+        datatemp.Produto = topstock_asc[i].DescArtigo;
+        datatemp.Stock = topstock_asc[i].Stock;
+        data_topstock_asc.push(datatemp);
     }
 
-    function formatHoverLabel(row, preUnit) {
-        var m_long_names = new Array("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
-        var d = new Date(row.month);
-        var curr_month = d.getMonth();
-        var curr_year = d.getFullYear();
+    var topstock_desc =  @Html.Raw(Json.Encode(@desc));
+    var data_topstock_desc = [];
+    for(var i = 0; i < topstock_desc.length; i++){
+        var datatemp = {Produto: 'teste', Stock: '3'};
 
-        var salesText = "Balanço para "+m_long_names[curr_month] + " de " + curr_year;
-        salesText = salesText + "<br/>"+labelsInGraph[0]+": "+preUnit+row['vendas'];
-        salesText = salesText + "<br/>"+labelsInGraph[1]+": "+preUnit+row['compras'];
-        salesText = salesText + "<br/>"+labelsInGraph[2]+": "+preUnit+row['lucro'];
-        return salesText;
+        datatemp.Produto = topstock_desc[i].DescArtigo;
+        datatemp.Stock = topstock_desc[i].Stock;
+        data_topstock_desc.push(datatemp);
     }
 
-    labelsInGraph = ['Vendas', 'Compras', 'Lucro'];
-    var firstchart = Morris.Line({
+    var firstchart = Morris.Bar({
         element: 'firstchart',
-        data: data_crescimento,
-        xkey: 'month',
-        // A list of names of data record attributes that contain y-values.
-        ykeys: ['vendas', 'compras', 'lucro'],
-        lineColors: ['green', 'red', 'blue'],
-        // Labels for the ykeys -- will be displayed when you hover over the
-        // chart.
-        labels: labelsInGraph,
-        hoverCallback: function (index, options, content, row) {
-            return formatHoverLabel(row, options.preUnits);
-        },
-        xLabelFormat: function(str){
-            return formatDate(str);
-        },
-        preUnits: '€',
+        data: data_topstock_desc,
+        xkey: 'Produto',
+        ykeys: ['Stock'],
+        labels: ['Stock atual:'],
         resize: true
     });
 
-    jQuery(function ($) {
-
-        $(document).on({
-            ajaxStart: function() {
-                $('#wait').css('display', 'block');
-            },
-            ajaxStop: function() {
-                $('#wait').css('display', 'none');
-            }
-        });
-
-        $('#year-selection').on('change', function() {
-            var teste = $('#selYear').val();
-            var data_crescimento = [];
-            if(teste == null){
-                return;
-            }
-            else if(teste == 3){
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/doccompra/years/' + teste,
-                    success: function(response) {
-                        for(var i = 0; i < response.length; i++){
-                            var datatemp = {y: 'teste', b: '2' };
-
-                            datatemp.y = response[i].Num;
-                            datatemp.b = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
-                            data_crescimento.push(datatemp);
-                        }
-                    }
-                });
-
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/docvenda/years/' + teste,
-                    success: function(response) {
-                        for(var i = 0; i < response.length; i++){
-                            var datatemp = {y: 'teste', a: '2' };
-
-                            datatemp.y = response[i].Num;
-                            datatemp.a = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
-                            data_crescimento.push(datatemp);
-                        }
-                        firstchart.setData(data_crescimento);
-                    }
-                });
-
-            }
-            else{
-
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/lucro/year/' + teste,
-                    success: function(response) {
-                        firstchart.setData(response);
-                        firstchart.redraw();
-                    }
-                });
-
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/clientes/top/5/year/' + teste,
-                    success: function(response) {
-                        data_top_clientes.splice(0,data_top_clientes.length);
-                        for(var i = 0; i < response.length; i++){
-                            var datatemp = {label: 'teste', value: '2' };
-
-                            datatemp.label = response[i].NomeCliente;
-                            datatemp.value = parseFloat(Math.round(response[i].TotalGasto * 100) / 100).toFixed(2);
-                            data_top_clientes.push(datatemp);
-                        }
-                        secondchart.setData(data_top_clientes);
-                        secondchart.redraw();
-                    }
-                });
-
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/artigos/top/5/year/' + teste,
-                    success: function(response) {
-                        data_top_artigos.splice(0,data_top_artigos.length);
-                        for(var i = 0; i < response.length; i++){
-                            var datatemp = {label: 'teste', value: '2' };
-
-                            datatemp.label = response[i].DescArtigo;
-                            datatemp.value = parseFloat(Math.round(response[i].TotalVendas * 100) / 100).toFixed(2);
-                            data_top_artigos.push(datatemp);
-                        }
-                        thirdchart.setData(data_top_artigos);
-                        thirdchart.redraw();
-                    }
-                });
-
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/doccompra/totalabs/year/' + teste,
-                    success: function(response) {
-                        $('#total-compras').html(response);
-                    }
-                });
-
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/docvenda/totalabs/year/' + teste,
-                    success: function(response) {
-                        $('#total-vendas').html(response);
-                    }
-                });
-
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/contas/receber/' + teste,
-                    success: function(response) {
-                        $('#areceber').html(response);
-                    }
-                });
-
-                $.ajax({
-                    async: true,
-                    type: 'GET',
-                    url: 'http://localhost:49413/api/contas/pagar/' + teste,
-                    success: function(response) {
-                        $('#apagar').html(response);
-                    }
-                });
-            }
-
-
-        });
-    });
-
-    var secondchart = Morris.Donut({
+    var secondchart = Morris.Bar({
         element: 'secondchart',
-        resize: true,
-        data: data_top_clientes
-    });
-
-    var thirdchart = Morris.Donut({
-        element: 'thirdchart',
-        resize: true,
-        data: data_top_artigos
+        data: data_topstock_asc,
+        xkey: 'Produto',
+        ykeys: ['Stock'],
+        labels: ['Stock atual:'],
+        resize: true
     });
 </script>
 
