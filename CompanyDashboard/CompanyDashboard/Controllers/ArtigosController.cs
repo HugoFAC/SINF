@@ -51,6 +51,21 @@ namespace CompanyDashboard.Controllers
             }
         }
 
+        public Object Get(string id, string param, string param2)
+        {
+            int year;
+            bool isNumeric = int.TryParse(param2, out year);
+            if (id == "categoria" && param == "year" && isNumeric)
+            {
+                IEnumerable<Lib_Primavera.Model.Artigo> artigos = Lib_Primavera.PriIntegration.GetCatArtigosYear(year);
+                return artigos;
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/artigos/top/5/year/2013");
+            }
+        }
+
         // GET pi/artigos/top/5/year/2013
         public Object Get(string id, string param, string param2, string param3)
         {
@@ -60,6 +75,16 @@ namespace CompanyDashboard.Controllers
             if (id == "top" && param2 == "year" && isNumeric && isNumeric2)
             {
                 IEnumerable<Lib_Primavera.Model.Artigo> artigos = Lib_Primavera.PriIntegration.GetTopArtigosYear(numArtigos, year);
+                return artigos;
+            }
+            else if (id == "topqtd" && param2 == "year" && isNumeric && isNumeric2)
+            {
+                IEnumerable<Lib_Primavera.Model.Artigo> artigos = Lib_Primavera.PriIntegration.GetTopQtdArtigosYear(numArtigos, year);
+                return artigos;
+            }
+            else if (id == "topcompras" && param2 == "year" && isNumeric && isNumeric2)
+            {
+                IEnumerable<Lib_Primavera.Model.Artigo> artigos = Lib_Primavera.PriIntegration.GetTopArtigosCompradosYear(numArtigos, year);
                 return artigos;
             }
             else

@@ -1,109 +1,51 @@
 ﻿@{
     ViewBag.Title = "Sales";
 }
+@{
+    var client = new WebClient();
+    client.Encoding = System.Text.Encoding.UTF8;
+    var json = client.DownloadString("http://localhost:49413/api/docvenda/year/0");
+    var vendas = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/artigos/topqtd/5/year/0");
+    var top_artigos = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/artigos/categoria/year/0"); 
+    var top_categorias = Json.Decode(json);
+}
 
 <div class="container-fluid">
     <div class="row">
-        <div class="main">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li><a href="/">Resumo</a></li>
+                <li class="active"><a href="/Sales">Vendas <span class="sr-only">(current)</span></a></li>
+                <li><a href="/Purchases">Compras</a></li>
+                <li><a href="/Inventory">Inventário</a></li> 
+            </ul>
+        </div>
+ 
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h1 class="page-header">Dashboard</h1>
 
             <div class="row">
-                <div class="col-lg-6 col-sm-12">
-                    <h2>Produtos</h2>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Vendido (x)</th>
-                                    <th>Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Produto 1</td>
-                                    <td>123</td>
-                                    <td>21</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 2</td>
-                                    <td>220</td>
-                                    <td>41</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 3</td>
-                                    <td>64</td>
-                                    <td>54</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 4</td>
-                                    <td>145</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>Produto 5</td>
-                                    <td>24</td>
-                                    <td>0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="col-lg-12 col-sm-12">
+                    <h2>Crescimento</h2>
+                    <br />
+                    <br />
+                    <div id="firstchart"></div>
+                    <hr />
+                    <br />
+                    <br />
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-lg-6 col-sm-12">
-                        <h2>Produtos vendidos recentemente</h2>
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Produto</th>
-                                        <th>Vendido (x)</th>
-                                        <th>Data</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Produto 1</td>
-                                        <td>250</td>
-                                        <td>21/11/2015</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Produto 2</td>
-                                        <td>220</td>
-                                        <td>11/11/2015</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Produto 4</td>
-                                        <td>214</td>
-                                        <td>10/11/2015</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Produto 4</td>
-                                        <td>145</td>
-                                        <td>29/10/2015</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Produto 5</td>
-                                        <td>24</td>
-                                        <td>23/10/2015</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 col-sm-12">
-                            <h2>Produtos mais vendidos</h2>
-                            <div id="firstchart"></div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12">
-                            <h2>Vendas</h2>
-                            <div id="secondchart"></div>
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6" id="top-artigos">
+                    <h2 class=" text-center">Produtos mais vendidos</h2>
+                    <div id="secondchart"></div>
+                </div>
+                <div class="col-lg-6 col-sm-6" data-chart-values="@top_artigos" id="top-Categorias">
+                    <h2 class="text-center">Top Categorias</h2>
+                    <div id="thirdchart"></div>
                 </div>
             </div>
         </div>
@@ -113,38 +55,183 @@
 
 <script>
 
-    Morris.Bar({
+    $(".panel").css('cursor', 'pointer');
+
+    var top_artigos =  @Html.Raw(Json.Encode(@top_artigos));
+    var top_categorias =  @Html.Raw(Json.Encode(@top_categorias));
+    var data_top_artigos = [];
+    for(var i = 0; i < top_artigos.length; i++){
+        var datatemp = {Produto: 'teste', Vendido: '2', Stock: '3' };
+
+        datatemp.Produto = top_artigos[i].DescArtigo;
+        datatemp.Vendido = top_artigos[i].Quantidade;
+        datatemp.Stock = top_artigos[i].Stock;
+        data_top_artigos.push(datatemp);
+    }
+
+    var data_top_categorias = [];
+    for(var i = 0; i < top_categorias.length; i++){
+        var datatemp = {label: 'teste', value: '2'};
+
+        datatemp.label = decodeURI(top_categorias[i].Categoria);
+        datatemp.value = top_categorias[i].TotalVendas;
+        data_top_categorias.push(datatemp);
+    }
+    var data_vendas = @Html.Raw(Json.Encode(@vendas));
+
+    function formatDate(myDate){
+        var m_names = new Array("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez");
+
+        var d = new Date(myDate);
+
+        var curr_month = d.getMonth();
+        return (m_names[curr_month]);
+    }
+
+    function formatHoverLabel(row, preUnit) {
+        var m_long_names = new Array("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+        var d = new Date(row.Num);
+        var curr_month = d.getMonth();
+
+        var salesText = "Vendas em "+m_long_names[curr_month];
+        salesText = salesText + "<br/>"+row['Total']+preUnit;
+        return salesText;
+    }
+
+    labelsInGraph = ['Vendas'];
+    var firstchart = Morris.Line({
         element: 'firstchart',
-        data: [
-          { y: 'Produto 1', a: 123},
-          { y: 'Produto 2', a: 220},
-          { y: 'Produto 3', a: 64},
-          { y: 'Produto 4', a: 145},
-          { y: 'Produto 5', a: 24}
-        ],
-        xkey: 'y',
-        ykeys: ['a'],
-        hideHover: true,
-        resize: true,
-        labels: ['Número de vendas']
+        data: data_vendas,
+        xkey: 'Num',
+        ykeys: ['Total'],
+        lineColors: ['green', 'red', 'blue'],
+        labels: labelsInGraph,
+        hoverCallback: function (index, options, content, row) {
+            return formatHoverLabel(row, options.preUnits);
+        },
+        xLabelFormat: function(str){
+            return formatDate(str);
+        },
+        preUnits: '€',
+        resize: true
+    });
+    
+    jQuery(function ($) {
+
+        $(document).on({
+            ajaxStart: function() {
+                $('#wait').css('display', 'block');
+            },
+            ajaxStop: function() {
+                $('#wait').css('display', 'none');
+            }
+        });
+
+        $('#year-selection').on('change', function() {
+            var teste = $('#selYear').val();
+            var data_vendas = [];
+            if(teste == null){
+                return;
+            }
+            else if(teste == 3){
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/doccompra/years/' + teste,
+                    success: function(response) {
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {y: 'teste', b: '2' };
+
+                            datatemp.y = response[i].Num;
+                            datatemp.b = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
+                            data_crescimento.push(datatemp);
+                        }
+                    }
+                });
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/docvenda/years/' + teste,
+                    success: function(response) {
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {y: 'teste', a: '2' };
+
+                            datatemp.y = response[i].Num;
+                            datatemp.a = parseFloat(Math.round(response[i].Total * 100) / 100).toFixed(2);
+                            data_crescimento.push(datatemp);
+                        }
+                        firstchart.setData(data_crescimento);
+                    }
+                });
+
+            }
+            else{
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/docvenda/year/' + teste,
+                    success: function(response) {
+                        firstchart.setData(response);
+                        firstchart.redraw();
+                    }
+                });
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/artigos/topqtd/5/year/' + teste,
+                    success: function(response) {
+                        data_top_artigos.splice(0,data_top_artigos.length);
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {Produto: 'teste', Vendido: '2', Stock: '3' };
+
+                            datatemp.Produto = response[i].DescArtigo;
+                            datatemp.Vendido = response[i].Quantidade;
+                            datatemp.Stock = response[i].Stock;
+                            data_top_artigos.push(datatemp);
+                        }
+                        secondchart.setData(data_top_artigos);
+                        secondchart.redraw();
+                    }
+                });
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/artigos/categoria/year/' + teste,
+                    success: function(response) {
+                        data_top_categorias.splice(0,data_top_categorias.length);
+                        for(var i = 0; i < response.length; i++){
+                            var datatemp = {label: 'teste', value: '2'};
+
+                            datatemp.label = response[i].Categoria;
+                            datatemp.value = response[i].TotalVendas;
+                            data_top_categorias.push(datatemp);
+                        }
+                        thirdchart.setData(data_top_categorias);
+                        thirdchart.redraw();
+                    }
+                });
+            }
+
+
+        });
     });
 
-    Morris.Area({
+    var secondchart = Morris.Bar({
         element: 'secondchart',
-        hideHover: true,
-        resize: true,
-        data: [
-          { y: '2006', a: 100, b: 90 },
-          { y: '2007', a: 75, b: 65 },
-          { y: '2008', a: 50, b: 40 },
-          { y: '2009', a: 75, b: 65 },
-          { y: '2010', a: 50, b: 40 },
-          { y: '2011', a: 75, b: 65 },
-          { y: '2012', a: 100, b: 90 }
-        ],
-        xkey: 'y',
-        ykeys: ['a', 'b'],
-        labels: ['Series A', 'Series B']
+        data: data_top_artigos,
+        xkey: 'Produto',
+        ykeys: ['Vendido', 'Stock'],
+        labels: ['Vendido (x):', 'Stock atual:'],
+        resize: true
     });
 
+    var thirdchart = Morris.Donut({
+        element: 'thirdchart',
+        resize: true,
+        data: data_top_categorias
+    });
 </script>

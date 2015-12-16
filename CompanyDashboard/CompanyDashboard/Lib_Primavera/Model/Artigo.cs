@@ -24,5 +24,22 @@ namespace CompanyDashboard.Lib_Primavera.Model
             get;
             set;
         }
+
+        public string Categoria
+        {
+            get;
+            set;
+        }
+
+        public int Quantidade
+        {
+            get;
+            set;
+        }
+        public int Stock
+        {
+            get;
+            set;
+        }
     }
 }

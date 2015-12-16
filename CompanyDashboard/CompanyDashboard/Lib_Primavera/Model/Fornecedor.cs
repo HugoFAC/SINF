@@ -35,5 +35,10 @@ namespace CompanyDashboard.Lib_Primavera.Model
             get;
             set;
         }
+        public double TotalMerc
+        {
+            get;
+            set;
+        }
     }
 }

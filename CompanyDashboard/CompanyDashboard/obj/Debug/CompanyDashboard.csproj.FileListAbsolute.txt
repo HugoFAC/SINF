@@ -211,3 +211,6 @@ C:\GIT\SINF\CompanyDashboard\CompanyDashboard\bin\ko\System.Spatial.resources.dl
 C:\GIT\SINF\CompanyDashboard\CompanyDashboard\bin\ru\System.Spatial.resources.dll
 C:\GIT\SINF\CompanyDashboard\CompanyDashboard\bin\zh-Hans\System.Spatial.resources.dll
 C:\GIT\SINF\CompanyDashboard\CompanyDashboard\bin\zh-Hant\System.Spatial.resources.dll
+C:\GIT\bin\CompanyDashboard.dll.config
+C:\GIT\bin\CompanyDashboard.dll
+C:\GIT\bin\CompanyDashboard.pdb

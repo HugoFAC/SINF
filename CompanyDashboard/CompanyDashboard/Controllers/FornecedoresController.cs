@@ -33,7 +33,21 @@ namespace CompanyDashboard.Controllers
                 return fornecedor;
             }
         }
-
+        public Object Get(string id, string param, string param2, string param3)
+        {
+            int numFornecedores, year;
+            bool isNumeric = int.TryParse(param, out numFornecedores);
+            bool isNumeric2 = int.TryParse(param3, out year);
+            if (id == "top" && param2 == "year" && isNumeric && isNumeric2)
+            {
+                IEnumerable<Lib_Primavera.Model.Fornecedor> fornecedores = Lib_Primavera.PriIntegration.GetTopFornecedoresYear(numFornecedores, year);
+                return fornecedores;
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "O pedido foi mal efectuado!\nExemplo: api/fornecedores/top/5/year/2013");
+            }
+        }
         //Precisamos de fazer novos webservices conforme o prof disse
         public Object Get(string id, string param, string param2, string param3, string param4)
         {

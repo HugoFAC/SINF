@@ -8,36 +8,23 @@
     var total_compras = Json.Decode(json);
     json = client.DownloadString("http://localhost:49413/api/clientes/top/5");
     var top_clientes = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/doccompra/years/3");
-    var compras_last3years = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/docvenda/years/3");
-    var vendas_last3years = Json.Decode(json);
-    json = client.DownloadString("http://localhost:49413/api/lucro/year/2013");
+    json = client.DownloadString("http://localhost:49413/api/lucro/year/0");
     var lucro = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/contas/receber/0");
+    var aReceber = Json.Decode(json);
+    json = client.DownloadString("http://localhost:49413/api/contas/pagar/0");
+    var aPagar = Json.Decode(json);
 }
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-                @*<li><a href="#">Reports</a></li>
-                <li><a href="#">Analytics</a></li>
-                <li><a href="#">Export</a></li> *@
+                <li class="active"><a href="/">Resumo <span class="sr-only">(current)</span></a></li>
+                <li><a href="/Sales">Vendas</a></li>
+                <li><a href="/Purchases">Compras</a></li>
+                <li><a href="/Inventory">Inventário</a></li>
             </ul>
-            @*<ul class="nav nav-sidebar">
-                <li><a href="">Nav item</a></li>
-                <li><a href="">Nav item again</a></li>
-                <li><a href="">One more nav</a></li>
-                <li><a href="">Another nav item</a></li>
-                <li><a href="">More navigation</a></li>
-            </ul>
-            <ul class="nav nav-sidebar">
-                <li><a href="">Nav item again</a></li>
-                <li><a href="">One more nav</a></li>
-                <li><a href="">Another nav item</a></li>
-            </ul>
-                *@
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h1 class="page-header">Dashboard</h1>
@@ -45,38 +32,6 @@
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
                     <h2>Crescimento</h2>
-                        <div class="btn-group float-right">
-                            <button type="button" class="btn btn-default" id="week-btn">Week</button>
-                            <button type="button" class="btn btn-default" id="month-btn">Month</button>
-                            <div class="form-group float-right" id="month-selection" hidden>
-                                <select class="form-control" id="selMonth">
-                                    <option value="3">Últimos 3 meses</option>
-                                    <option value="6">Últimos 6 meses</option>
-                                    <option value="01-01/">Janeiro</option>
-                                    <option value="01-02">Fevereiro</option>
-                                    <option value="01-03">Março</option>
-                                    <option value="01-04">Abril</option>
-                                    <option value="01-05">Maio</option>
-                                    <option value="01-06">Junho</option>
-                                    <option value="01-07">Julho</option>
-                                    <option value="01-08">Agosto</option>
-                                    <option value="01-09">Setembro</option>
-                                    <option value="01-10">Outubro</option>
-                                    <option value="01-11">Novembro</option>
-                                    <option value="01-12">Dezembro</option>
-                                </select>
-                            </div>
-                            <button type="button" class="btn btn-default" id="year-btn">Year</button>
-                            <div class="form-group float-right" id="year-selection" hidden>
-                                <select class="form-control" id="selYear">
-                                    <option value="3" selected>Últimos 3 anos</option>
-                                    <option value="2012">2012</option>
-                                    <option value="2013">2013</option>
-                                    <option value="2014">2014</option>
-                                    <option value="2015">2015</option>
-                                </select>
-                            </div>
-                        </div>
                     <br />
                     <br />
                     <div id="firstchart"></div>
@@ -113,7 +68,7 @@
                             <p class="text-uppercase mar-btm text-sm">Contas a receber</p>
                             <i class="fa fa-plus fa-5x"></i>
                             <hr>
-                            <p class="h2 text-thin">2,423</p>
+                            <p class="h2 text-thin" id="areceber">@aReceber</p>
                         </div>
                     </div>
                 </div>
@@ -123,7 +78,7 @@
                             <p class="text-uppercase mar-btm text-sm">Contas a pagar</p>
                             <i class="fa fa-minus fa-5x"></i>
                             <hr>
-                            <p class="h2 text-thin">7,428</p>
+                            <p class="h2 text-thin" id="apagar">@aPagar</p>
                         </div>
                     </div>
                 </div>
@@ -144,23 +99,19 @@
 
 <script>
 
+    $('.dropdown-menu.year-dropdown select').click(function (e) {
+        e.stopPropagation();
+    });
+
+    $("#sales-panel").css('cursor', 'pointer');
+    $("#purchases-panel").css('cursor', 'pointer');
     $("#sales-panel").click(function () {
         window.location.href = "Sales";
     });
 
     $("#purchases-panel").click(function () {
-        window.location.href = "Purchases/Purchases";
+        window.location.href = "Purchases";
     });
-
-    $("#areceivable-panel").click(function () {
-        window.location.href = "Accounts/Receivable";
-    });
-
-    $("#apayable-panel").click(function () {
-        window.location.href = "Accounts/Payable";
-    });
-
-    $(".panel").css('cursor', 'pointer');
 
     var top_artigos =  @Html.Raw(Json.Encode(@top_artigos));
     var data_top_artigos = [];
@@ -182,25 +133,6 @@
         data_top_clientes.push(datatemp);
     }
 
-    @*var compras_last3years =  @Html.Raw(Json.Encode(@compras_last3years));
-    var data_crescimento = [];
-    for(var i = 0; i < compras_last3years.length; i++){
-        var datatemp = {y: 'teste', b: '2' };
-
-        datatemp.y = compras_last3years[i].Num;
-        datatemp.b = parseFloat(Math.round(compras_last3years[i].Total * 100) / 100).toFixed(2);
-        data_crescimento.push(datatemp);
-    }
-
-    var vendas_last3years =  @Html.Raw(Json.Encode(@vendas_last3years));
-    for(var i = 0; i < vendas_last3years.length; i++){
-        var datatemp = {y: 'teste', a: '2' };
-
-        datatemp.y = vendas_last3years[i].Num;
-        datatemp.a = parseFloat(Math.round(vendas_last3years[i].Total * 100) / 100).toFixed(2);
-        data_crescimento.push(datatemp);
-    }*@
-
     var data_crescimento = @Html.Raw(Json.Encode(@lucro));
 
 
@@ -219,8 +151,9 @@
         var m_long_names = new Array("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
         var d = new Date(row.month);
         var curr_month = d.getMonth();
+        var curr_year = d.getFullYear();
 
-        var salesText = "Balanço para "+m_long_names[curr_month];
+        var salesText = "Balanço para "+m_long_names[curr_month] + " de " + curr_year;
         salesText = salesText + "<br/>"+labelsInGraph[0]+": "+preUnit+row['vendas'];
         salesText = salesText + "<br/>"+labelsInGraph[1]+": "+preUnit+row['compras'];
         salesText = salesText + "<br/>"+labelsInGraph[2]+": "+preUnit+row['lucro'];
@@ -258,30 +191,6 @@
             }
         });
 
-        $('#week-btn').on('click', function () {
-            //change data values using
-            //firstchart.options.data = newData;
-            $('#month-selection').hide();
-            $('#year-selection').hide();
-            firstchart.options.grid = false; //só para teste
-            firstchart.redraw();
-        });
-        $('#month-btn').on('click', function () {
-            //change data values using
-            //firstchart.options.data = newData;
-            $('#year-selection').hide();
-            $('#month-selection').show();
-            firstchart.options.grid = true; //só para teste
-            firstchart.redraw();
-        });
-        $('#year-btn').on('click', function () {
-            //change data values using
-            //firstchart.options.data = newData;
-            $('#month-selection').hide();
-            $('#year-selection').show();
-            firstchart.options.grid = true; //só para teste
-            firstchart.redraw();
-        });
         $('#year-selection').on('change', function() {
             var teste = $('#selYear').val();
             var data_crescimento = [];
@@ -386,7 +295,24 @@
                         $('#total-vendas').html(response);
                     }
                 });
-                $('#year-selection').hide();
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/contas/receber/' + teste,
+                    success: function(response) {
+                        $('#areceber').html(response);
+                    }
+                });
+
+                $.ajax({
+                    async: true,
+                    type: 'GET',
+                    url: 'http://localhost:49413/api/contas/pagar/' + teste,
+                    success: function(response) {
+                        $('#apagar').html(response);
+                    }
+                });
             }
 
 

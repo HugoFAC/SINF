@@ -5,15 +5,10 @@ using System.Web;
 
 namespace CompanyDashboard.Lib_Primavera.Model
 {
-    public class Month
+    public class Conta
     {
-        public String Num
-        {
-            get;
-            set;
-        }
 
-        public double Total
+        public double Valor
         {
             get;
             set;
