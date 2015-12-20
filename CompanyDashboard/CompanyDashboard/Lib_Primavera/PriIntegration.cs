@@ -1933,10 +1933,7 @@ namespace CompanyDashboard.Lib_Primavera
 
         public static IEnumerable<Model.Lucro> GetLucro(int year)
         {
-            //NumberStyles style;
-            //CultureInfo culture;
-            //style = NumberStyles.AllowDecimalPoint;
-            //culture = CultureInfo.CreateSpecificCulture("fr-FR");
+
             StdBELista objListVendas;
             StdBELista objListCompras;
             List<Model.Lucro> listlucro = new List<Model.Lucro>();

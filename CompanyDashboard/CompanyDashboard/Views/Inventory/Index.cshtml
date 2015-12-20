@@ -154,6 +154,10 @@
         else{
             $(this).html('<i class="fa fa-arrow-down"></i>');
         }
+        $('table tbody tr').on("click", function(){
+            window.location.href = "Produtos/id/" + $(this).attr("id");
+        });
+        $('table tbody tr').css('cursor', 'pointer');
     });
 
     $('#year-dropdown').remove();
