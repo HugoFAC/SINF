@@ -141,12 +141,10 @@
 
     var inventoryList = new List('inventario', options);
 
-    $('table tbody tr').each(function () {
-        $(this).on("click", function(){
-            window.location.href = "Produtos/id/" + $(this).attr("id");
-        })
-        $(this).css('cursor', 'pointer')
+    $('table tbody tr').on("click", function(){
+        window.location.href = "Produtos/id/" + $(this).attr("id");
     });
+    $('table tbody tr').css('cursor', 'pointer');
 
     $('table thead span').on("click", function(){
         var arrow = $(this).html();

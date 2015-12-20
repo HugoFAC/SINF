@@ -26,12 +26,12 @@
 
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
-                    <h4><strong>Código de barras:</strong> @artigo.CodBarras</h4>
+                    <h4><strong>Código de barras:</strong> @(String.IsNullOrEmpty(artigo.CodBarras) ? "N/D" : artigo.CodBarras)</h4>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
-                    <h4><strong>Categoria:</strong> @artigo.Categoria</h4>
+                    <h4><strong>Categoria:</strong> @(String.IsNullOrEmpty(artigo.Categoria) ? "Outros" : artigo.Categoria)</h4>
                 </div>
             </div>
             <div class="row">
@@ -88,12 +88,26 @@
             <hr>
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
-                    <h4><strong>Data última venda:</strong> @artigo.DataUltSaida</h4>
+                    @if(String.Equals(artigo.DataUltSaida, "1905-01-01T00:00:00"))
+                    {
+                        <h4><strong>Data última venda:</strong> Sem informação</h4>
+                    }
+                    else
+                    {
+                        <h4><strong>Data última venda:</strong> @artigo.DataUltSaida</h4>
+                    }
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12 col-sm-12">
-                    <h4><strong>Data última compra:</strong> @artigo.DataUltEntrada</h4>
+                    @if (String.Equals(artigo.DataUltEntrada, "1905-01-01T00:00:00"))
+                    {
+                        <h4><strong>Data última compra:</strong> Sem informação</h4>
+                    }
+                    else
+                    {
+                        <h4><strong>Data última compra:</strong> @artigo.DataUltEntrada</h4>
+                    }
                 </div>
             </div>
         </div>

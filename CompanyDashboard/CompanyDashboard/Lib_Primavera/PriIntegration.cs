@@ -10,8 +10,6 @@ using Interop.GcpBE800;
 using ADODB;
 using Interop.IGcpBS800;
 using System.Globalization;
-//using Interop.StdBESql800;
-//using Interop.StdBSSql800;
 
 namespace CompanyDashboard.Lib_Primavera
 {
@@ -436,7 +434,8 @@ namespace CompanyDashboard.Lib_Primavera
                 }
                 else
                 {
-                    objArtigo = PriEngine.Engine.Consulta("select Artigo.Artigo as id, Artigo.Descricao as descricao, Artigo.CodBarras, Artigo.Iva, Artigo.PCMedio, Artigo.DataUltEntrada, Artigo.DataUltSaida, Artigo.STKactual as stock, Familias.Descricao as categoria, ArtigoMoeda.PVP1, ArtigoMoeda.PVP2, ArtigoMoeda.PVP3, ArtigoMoeda.PVP4, ArtigoMoeda.PVP5, ArtigoMoeda.PVP6 from Artigo JOIN Familias on Artigo.Familia = Familias.Familia JOIN ArtigoMoeda on ArtigoMoeda.Artigo = Artigo.Artigo where Artigo.Artigo = '"+ codArtigo +"'");
+                    objArtigo = PriEngine.Engine.Consulta("select distinct Artigo.Artigo as id, Artigo.Descricao as descricao, Artigo.CodBarras, Artigo.Iva, Artigo.PCMedio, Artigo.DataUltEntrada, Artigo.DataUltSaida, Artigo.STKactual as stock, Familias.Descricao as categoria, ArtigoMoeda.PVP1, ArtigoMoeda.PVP2, ArtigoMoeda.PVP3, ArtigoMoeda.PVP4, ArtigoMoeda.PVP5, ArtigoMoeda.PVP6 from Artigo FULL OUTER JOIN Familias on Artigo.Familia = Familias.Familia JOIN ArtigoMoeda on ArtigoMoeda.Artigo = Artigo.Artigo where Artigo.Artigo = '" + codArtigo + "'");
+
                     myArt.CodArtigo = objArtigo.Valor("id");
                     myArt.DescArtigo = objArtigo.Valor("descricao");
                     myArt.Categoria = objArtigo.Valor("categoria");
@@ -1833,7 +1832,6 @@ namespace CompanyDashboard.Lib_Primavera
                     if (PriEngine.Engine.Comercial.Vendas.Existe(dv.Filial, dv.Tipodoc, dv.Serie, dv.NumDoc) == false)
                     {
                         erro.Erro = 1;
-                        System.Diagnostics.Debug.WriteLine("FODADSSE  " + dv.Filial + "  " + dv.Tipodoc + "  " + dv.Serie + "  " + dv.NumDoc);
                         erro.Descricao = "O documento de venda não existe";
                         return erro;
                     }
